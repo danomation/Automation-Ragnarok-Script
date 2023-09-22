@@ -6,7 +6,7 @@ RAGNAROK_USER_PASS=Password123!
 RATHENA_USER_PASS=Password123!
 
 WAN_IP=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'`
-echo WAN_IP
+echo ${WAN_IP}
 
 
 #create ragnarok account
@@ -51,7 +51,7 @@ systemctl restart php8.1-fpm
 cd /var/www/html/
 ##
 #clone repo for robrowser
-sudo git clone https://github.com/MrAntares/roBrowserLegacy.git .
+cd /var/www/html/ && git clone https://github.com/MrAntares/roBrowserLegacy.git
 
 cd /var/www/html/roBrowserLegacy/examples/
 echo "<!DOCTYPE html><html><head><title>ROBrowser's App from http://www.robrowser.com</title>
@@ -107,7 +107,7 @@ sudo apt-get -y update && sudo NEEDRESTART_SUSPEND=1 apt-get upgrade --yes
 sudo NEEDRESTART_SUSPEND=1 apt -y install build-essential zlib1g-dev libpcre3-dev
 sudo NEEDRESTART_SUSPEND=1 apt -y install libmariadb-dev libmariadb-dev-compat
 cd /home/rathena
-git clone https://github.com/rathena/rathena.git .
+cd /home/rathena & git clone https://github.com/rathena/rathena.git
 cd /home/rathena/rathena
 /home/rathena/rathena/configure --enable-epoll=yes --enable-prere=no --enable-vip=no --enable-packetver=20131223
 make clean && make server
