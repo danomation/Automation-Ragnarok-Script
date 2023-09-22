@@ -35,11 +35,11 @@ echo "server {
 
 
          location / {
-                      try_files $uri $uri/ /index.php$is_args$args;
+                      try_files \$uri \$uri/ /index.php\$is_args\$args;
          }
 
-         location ~ \.php$ {
-            fastcgi_split_path_info ^(.+\.php)(/.+)$;
+         location ~ \.php\$ {
+            fastcgi_split_path_info ^(.+\.php)(/.+)\$;
             fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
             fastcgi_index index.php;
             include fastcgi.conf;
@@ -56,11 +56,10 @@ cd /var/www/html/
 #clone repo for robrowser
 cd /var/www/html/ && git clone https://github.com/MrAntares/roBrowserLegacy.git
 
-
 cd /var/www/html/roBrowserLegacy/examples/
-sed -i 's/5.135.190.4/${WAN_IP}/g' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
+sed -i 's/5.135.190.4/'"$WAN_IP"'/g' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
 sed -i 's/7000/6900/g' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
-sed -i 's/5.135.190.4:443/${WAN_IP}:5999/g' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
+sed -i 's/5.135.190.4:443/'"$WAN_IP"':5999/g' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
 
 cd /home/ragnarok/
 sudo NEEDRESTART_SUSPEND=1 apt-get -y install npm
