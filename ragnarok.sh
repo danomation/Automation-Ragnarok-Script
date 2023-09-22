@@ -55,9 +55,9 @@ cd /var/www/html/
 cd /var/www/html/ && git clone https://github.com/MrAntares/roBrowserLegacy.git
 
 cd /var/www/html/roBrowserLegacy/examples/
-sed -i 's/5.135.190.4/{$WAN_IP}' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
-sed -i 's/7000/6900' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
-sed -i 's/5.135.190.4:443/${$WAN_IP}:5999' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
+sed -i 's/5.135.190.4/{$WAN_IP}/g' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
+sed -i 's/7000/6900/g' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
+sed -i 's/5.135.190.4:443/${$WAN_IP}:5999/g' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
 
 cd /home/ragnarok/
 sudo NEEDRESTART_SUSPEND=1 apt-get -y install npm
