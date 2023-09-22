@@ -21,6 +21,7 @@ sudo apt-get -y update && sudo NEEDRESTART_SUSPEND=1 apt-get upgrade --yes
 sudo NEEDRESTART_SUSPEND=1 apt-get -y install nginx
 sudo NEEDRESTART_SUSPEND=1 apt-get install php8.1-fpm -y
 cd /etc/nginx/sites-available/
+mv default default.old
 echo "server {
         listen 80 default_server;
         listen [::]:80 default_server;
