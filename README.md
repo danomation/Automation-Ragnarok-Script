@@ -7,7 +7,7 @@ Fresh Ubuntu 22.04, open root, and type in command:
 1. git clone https://github.com/danomation/ragnarok_script.git && bash ragnarok_script/ragnarok.sh  
 2. Wait for server to install and reboot itself, then once it comes back up navigate to http:// youriphere/roBrowserLegacy/examples/api-online-popup.html  
 OR  
-# (Optional) Cloud init  
+# (Optional) Cloud init code  
 #cloud-config  
 runcmd:  
 \- git clone https://github.com/danomation/ragnarok_script.git && bash ragnarok_script/ragnarok.sh  
