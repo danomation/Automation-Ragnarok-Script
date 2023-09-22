@@ -1,10 +1,12 @@
 #!/bin/bash
-MARIADB_ROOT_PASS=your_database_root_password
+MARIADB_ROOT_PASS=Password123!
 RAGNAROK_DATABASE_PASS=ragnarok
 
-RAGNAROK_USER_PASS=your_ragnarok_user_password
-RATHENA_USER_PASS=your_rathena_user_password
+RAGNAROK_USER_PASS=Password123!
+RATHENA_USER_PASS=Password123!
 
+WAN_IP=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'`
+echo WAN_IP
 
 
 #create ragnarok account
@@ -41,13 +43,49 @@ echo "server {
         fastcgi_pass unix:/run/php/php8.1-fpm.sock;
     }
 }" > default
+cat 777 /etc/nginx/sites-available/default
 systemctl restart nginx
 
 cd /var/www/html/
 ##
-
 #clone repo for robrowser
-sudo git clone https://github.com/MrAntares/roBrowserLegacy.git /var/www/html/
+sudo git clone https://github.com/MrAntares/roBrowserLegacy.git .
+
+cd /var/www/html/roBrowserLegacy/examples/
+echo "<!DOCTYPE html><html><head><title>ROBrowser's App from http://www.robrowser.com</title>
+<meta name=\"viewport\" content=\"initial-scale=1.0, user-scalable=yes\" />
+<script type=\"text/javascript\" src=\"../api.js\"></script>
+<script type=\"text/javascript\">
+function initialize() {
+    var ROConfig = {
+    target:        document.getElementById(\"robrowser\"),
+    type:          ROBrowser.TYPE.FRAME,
+    application:   ROBrowser.APP.ONLINE,
+    remoteClient:  \"http://grf.robrowser.com/\",
+    width:          800,
+    height:         600,
+    development:    false,
+    servers: [{
+        display:     \"Local Test\",
+        desc:        \"Local Demo Server\",
+        address:     \"localhost\",
+        port:        6900,
+        version:     25,
+        langtype:    12,
+        packetver:   20131223,
+        packetKeys:  true,
+        socketProxy: \"ws://${WAN_IP}:5999/\",
+        adminList:   [2000000]
+    }],
+    skipServerList:  true,
+    skipIntro:       false,
+    };
+var RO = new ROBrowser(ROConfig);
+RO.start();
+}
+window.addEventListener(\"load\", initialize, false);
+</script></head><body><div id=\"robrowser\">Initializing roBrowser...</div></body></html>
+" > api-online-frame.html
 
 cd /home/ragnarok/
 sudo NEEDRESTART_SUSPEND=1 apt-get -y install npm
@@ -67,9 +105,9 @@ sudo apt-get -y update && sudo NEEDRESTART_SUSPEND=1 apt-get upgrade --yes
 sudo NEEDRESTART_SUSPEND=1 apt -y install build-essential zlib1g-dev libpcre3-dev
 sudo NEEDRESTART_SUSPEND=1 apt -y install libmariadb-dev libmariadb-dev-compat
 cd /home/rathena
-git clone https://github.com/rathena/rathena.git /home/rathena/
+git clone https://github.com/rathena/rathena.git .
 cd /home/rathena/rathena
-/home/rathena/rathena/configure --enable-epoll=yes --enable-prere=no --enable-vip=no --enable-packetver=20151001
+/home/rathena/rathena/configure --enable-epoll=yes --enable-prere=no --enable-vip=no --enable-packetver=20131223
 make clean && make server
 sudo NEEDRESTART_SUSPEND=1 apt -y install mariadb-server
 sudo NEEDRESTART_SUSPEND=1 apt-get -y install mariadb-client
