@@ -204,7 +204,7 @@ echo "Keep Window Open!"
 echo "open http://${WAN_IP}/roBrowserLegacy/examples/api-online-popup.html to play."
 wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121
 #add to crontab so it starts the server on reboot
-cd /home/rathena
-echo "nohup bash /home/rathena/rathena/athena-start start &" > startup.sh
-(crontab -l 2>/dev/null; echo "@reboot /home/rathena/startup.sh") | crontab -
-(crontab -l 2>/dev/null; echo "@reboot wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121") | crontab -
+cd /home/rathena/rathena/
+echo "nohup bash /home/rathena/rathena/athena-start start &" > /home/rathena/rathena/startup.sh
+(crontab -l 2>/dev/null; echo "@reboot sleep 10 && /home/rathena/rathena/startup.sh") | crontab -
+(crontab -l 2>/dev/null; echo "@reboot sleep 15 && wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121") | crontab -
