@@ -74,13 +74,13 @@ echo "<!DOCTYPE html>
                                                 servers: [{
                                                         display:     \"Demo Server\",
                                                         desc:        \"roBrowser's demo server\",
-                                                        address:     \"5.161.208.198\",
+                                                        address:     \"localhost\",
                                                         port:        6900,
                                                         version:     25,
                                                         langtype:    12,
                                                         packetver:   20131223,
                                                         packetKeys:  true,
-                                                        socketProxy: \"ws:/5.161.208.198:443/\",
+                                                        socketProxy: \"ws://5.161.208.198:5999/\",
                                                         adminList:   [2000000]
                                                 }],
                                                 skipServerList:  true,
