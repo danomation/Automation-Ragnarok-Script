@@ -193,6 +193,5 @@ echo "${SECURE_MYSQL_2}"
 
 echo "${SECURE_MYSQL_3}"
 sed -i 's/new_account: no/new_account: yes/g' /home/rathena/rathena/conf/login_athena.conf
-bash /home/rathena/rathena/athena-start start
-cd /home/ragnarok/
-sudo wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121
+nohup bash /home/rathena/rathena/athena-start start &
+wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121
