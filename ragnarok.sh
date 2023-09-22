@@ -1,9 +1,9 @@
 #!/bin/bash
-MARIADB_ROOT_PASS=Password123!
+MARIADB_ROOT_PASS=ragnarok
 RAGNAROK_DATABASE_PASS=ragnarok
 
-RAGNAROK_USER_PASS=Password123!
-RATHENA_USER_PASS=Password123!
+RAGNAROK_USER_PASS=ragnarok
+RATHENA_USER_PASS=ragnarok
 
 WAN_IP=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'`
 echo ${WAN_IP}
