@@ -34,14 +34,15 @@ echo "server {
         server_name _;
 
 
-    location / {
-        try_files $uri $uri/ =404;
-    }
+         location / {
+                      try_files $uri $uri/ /index.php$is_args$args;
+         }
 
-
-    location ~ \.php$ {
-        include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+         location ~ \.php$ {
+            fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+            fastcgi_index index.php;
+            include fastcgi.conf;
     }
 }" > default
 chmod 777 -R /etc/nginx/sites-available/
@@ -54,40 +55,50 @@ cd /var/www/html/
 cd /var/www/html/ && git clone https://github.com/MrAntares/roBrowserLegacy.git
 
 cd /var/www/html/roBrowserLegacy/examples/
-echo "<!DOCTYPE html><html><head><title>ROBrowser's App from http://www.robrowser.com</title>
-<meta name=\"viewport\" content=\"initial-scale=1.0, user-scalable=yes\" />
-<script type=\"text/javascript\" src=\"../api.js\"></script>
-<script type=\"text/javascript\">
-function initialize() {
-    var ROConfig = {
-    target:        document.getElementById(\"robrowser\"),
-    type:          ROBrowser.TYPE.FRAME,
-    application:   ROBrowser.APP.ONLINE,
-    remoteClient:  \"http://grf.robrowser.com/\",
-    width:          800,
-    height:         600,
-    development:    false,
-    servers: [{
-        display:     \"Local Test\",
-        desc:        \"Local Demo Server\",
-        address:     \"localhost\",
-        port:        6900,
-        version:     25,
-        langtype:    12,
-        packetver:   20131223,
-        packetKeys:  true,
-        socketProxy: \"ws://${WAN_IP}:5999/\",
-        adminList:   [2000000]
-    }],
-    skipServerList:  true,
-    skipIntro:       false,
-    };
-var RO = new ROBrowser(ROConfig);
-RO.start();
-}
-window.addEventListener(\"load\", initialize, false);
-</script></head><body><div id=\"robrowser\">Initializing roBrowser...</div></body></html>
-" > api-online-frame.html
+echo "<!DOCTYPE html>
+<html>
+        <head>
+                <title>ROBrowser's App from http://www.robrowser.com</title>
+                <meta name=\"viewport\" content=\"initial-scale=1.0, user-scalable=no\" />
+                <script type=\"text/javascript\" src=\"../api.js\"></script>
+                <script type=\"text/javascript\">
+                        function initialize() {
+                                document.getElementById(\'robrowser\').addEventListener(\"click\", function(){
+                                        var ROConfig = {
+                                                type:          ROBrowser.TYPE.POPUP,
+                                                application:   ROBrowser.APP.ONLINE,
+                                                remoteClient:  \"http://grf.robrowser.com/\",
+                                                width:          800,
+                                                height:         600,
+                                                development:    true,
+                                                servers: [{
+                                                        display:     \"Demo Server\",
+                                                        desc:        \"roBrowser's demo server\",
+                                                        address:     \"5.161.208.198\",
+                                                        port:        6900,
+                                                        version:     25,
+                                                        langtype:    12,
+                                                        packetver:   20131223,
+                                                        packetKeys:  true,
+                                                        socketProxy: \"ws:/5.161.208.198:443/\",
+                                                        adminList:   [2000000]
+                                                }],
+                                                skipServerList:  true,
+                                                skipIntro:       false,
+                                        };
+                                        var RO = new ROBrowser(ROConfig);
+                                        RO.start();
+                                }, false );
+                        }
+                        window.addEventListener(\"load\", initialize, false);
+                </script>
+        </head>
+        <body>
+                <input type=\"button\" value=\"Run roBrowser\" id=\"robrowser\"/>
+        </body>
+</html>
+
+" > api-online-popup.html
 
 cd /home/ragnarok/
 sudo NEEDRESTART_SUSPEND=1 apt-get -y install npm
@@ -106,16 +117,15 @@ sudo apt-get -y update && sudo NEEDRESTART_SUSPEND=1 apt-get upgrade --yes
 
 sudo NEEDRESTART_SUSPEND=1 apt -y install build-essential zlib1g-dev libpcre3-dev
 sudo NEEDRESTART_SUSPEND=1 apt -y install libmariadb-dev libmariadb-dev-compat
-cd /home/rathena
 cd /home/rathena & git clone https://github.com/rathena/rathena.git
 cd /home/rathena/rathena
-/home/rathena/rathena/configure --enable-epoll=yes --enable-prere=no --enable-vip=no --enable-packetver=20131223
+bash /home/rathena/rathena/configure --enable-epoll=yes --enable-prere=no --enable-vip=no --enable-packetver=20131223
 make clean && make server
 sudo NEEDRESTART_SUSPEND=1 apt -y install mariadb-server
 sudo NEEDRESTART_SUSPEND=1 apt-get -y install mariadb-client
 sudo NEEDRESTART_SUSPEND=1 apt-get -y install expect
 
-cd /home/rathena
+cd /home/rathena/rathena
 MARIADB_STRING="FLUSH PRIVILEGES;
 drop user if exists 'ragnarok'@'localhost';
 drop user if exists ragnarok; DROP DATABASE IF EXISTS ragnarok;
