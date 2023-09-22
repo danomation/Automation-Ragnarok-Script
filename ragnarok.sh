@@ -196,5 +196,9 @@ echo "${SECURE_MYSQL_2}"
 
 echo "${SECURE_MYSQL_3}"
 sed -i 's/new_account: no/new_account: yes/g' /home/rathena/rathena/conf/login_athena.conf
+sed -i 's/start_point: iz_int,18,26:iz_int01,18,26:iz_int02,18,26:iz_int03,18,26:iz_int04,18,26/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
+sed -i 's/start_point_pre: new_1-1,53,111:new_2-1,53,111:new_3-1,53,111:new_4-1,53,111:new_5-1,53,111/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
+sed -i 's/start_point_doram: lasa_fild01,48,297/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
+sed -i 's/server_name: rAthena/server_name: ragnarok.sh/g' /home/rathena/rathena/conf/char_athena.conf
 nohup bash /home/rathena/rathena/athena-start start &
 wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121
