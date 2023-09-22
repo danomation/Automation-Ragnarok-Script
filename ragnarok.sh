@@ -47,7 +47,18 @@ echo "server {
 
 }
 " > default
+echo " <html xmlns=\"http://www.w3.org/1999/xhtml\">    
+  <head>      
+    <title>ragnarok.sh</title>      
+    <meta http-equiv=\"refresh\" content=\"0;URL='http://${WAN_IP}/roBrowserLegacy/examples/api-online-popup.html'\" />    
+  </head>    
+  <body> 
+    <p>Redirecting to the <a href=\"http://${WAN_IP}/roBrowserLegacy/examples/api-online-popup.html\">
+      example url</a>.</p> 
+  </body>    
+</html>" > /var/www/html/index.html
 chmod 777 -R /etc/nginx/sites-available/
+chmod 775 /var/www/html/index.html
 systemctl restart nginx
 systemctl restart php8.1-fpm
 
