@@ -18,6 +18,31 @@ usermod -aG sudo ragnarok
 sudo apt-get -y update && sudo NEEDRESTART_SUSPEND=1 apt-get upgrade --yes
 sudo NEEDRESTART_SUSPEND=1 apt-get -y install nginx
 sudo NEEDRESTART_SUSPEND=1 apt-get install php8.1-fpm -y
+cd /etc/nginx/sites-available/
+echo "server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+
+    root /var/www/html;
+    index index.php index.html index.htm;
+
+
+        server_name _;
+
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+    }
+}" > default
+systemctl restart nginx
+
 cd /var/www/html/
 ##
 
