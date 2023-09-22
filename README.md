@@ -5,7 +5,7 @@ It's just a bash that automates installation of several things.
 # Instructions:
 Fresh Ubuntu 22.04, open root, and type in command:  
 1. git clone https://github.com/danomation/ragnarok_script.git && bash ragnarok_script/ragnarok.sh  
-2. Wait for server to install and reboot itself, then once it comes back up navigate to http:// youriphere/roBrowserLegacy/examples/api-online-popup.html  
+2. Wait for server to install 15-20mins then navigate to http:// youriphere/ 
 
 # Video:  
 
