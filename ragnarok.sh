@@ -55,50 +55,9 @@ cd /var/www/html/
 cd /var/www/html/ && git clone https://github.com/MrAntares/roBrowserLegacy.git
 
 cd /var/www/html/roBrowserLegacy/examples/
-echo "<!DOCTYPE html>
-<html>
-        <head>
-                <title>ROBrowser's App from http://www.robrowser.com</title>
-                <meta name=\"viewport\" content=\"initial-scale=1.0, user-scalable=no\" />
-                <script type=\"text/javascript\" src=\"../api.js\"></script>
-                <script type=\"text/javascript\">
-                        function initialize() {
-                                document.getElementById(\'robrowser\').addEventListener(\"click\", function(){
-                                        var ROConfig = {
-                                                type:          ROBrowser.TYPE.POPUP,
-                                                application:   ROBrowser.APP.ONLINE,
-                                                remoteClient:  \"http://grf.robrowser.com/\",
-                                                width:          800,
-                                                height:         600,
-                                                development:    true,
-                                                servers: [{
-                                                        display:     \"Demo Server\",
-                                                        desc:        \"roBrowser's demo server\",
-                                                        address:     \"localhost\",
-                                                        port:        6900,
-                                                        version:     25,
-                                                        langtype:    12,
-                                                        packetver:   20131223,
-                                                        packetKeys:  true,
-                                                        socketProxy: \"ws://5.161.208.198:5999/\",
-                                                        adminList:   [2000000]
-                                                }],
-                                                skipServerList:  true,
-                                                skipIntro:       false,
-                                        };
-                                        var RO = new ROBrowser(ROConfig);
-                                        RO.start();
-                                }, false );
-                        }
-                        window.addEventListener(\"load\", initialize, false);
-                </script>
-        </head>
-        <body>
-                <input type=\"button\" value=\"Run roBrowser\" id=\"robrowser\"/>
-        </body>
-</html>
-
-" > api-online-popup.html
+sed -i 's/5.135.190.4/{$WAN_IP}' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
+sed -i 's/7000/6900' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
+sed -i 's/5.135.190.4:443/${$WAN_IP}:5999' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
 
 cd /home/ragnarok/
 sudo NEEDRESTART_SUSPEND=1 apt-get -y install npm
@@ -233,7 +192,7 @@ echo "${SECURE_MYSQL_2}"
         ")
 
 echo "${SECURE_MYSQL_3}"
-
+sed -i 's/new_account: no/new_account: yes/g' /home/rathena/rathena/conf/login_athena.conf
 bash /home/rathena/rathena/athena-start start
 cd /home/ragnarok/
 sudo wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121
