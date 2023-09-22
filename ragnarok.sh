@@ -200,4 +200,6 @@ sed -i 's/start_point_pre: new_1-1,53,111:new_2-1,53,111:new_3-1,53,111:new_4-1,
 sed -i 's/start_point_doram: lasa_fild01,48,297/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
 sed -i 's/server_name: rAthena/server_name: ragnarok.sh/g' /home/rathena/rathena/conf/char_athena.conf
 nohup bash /home/rathena/rathena/athena-start start &
+echo "Keep Window Open!"
+echo "open http://${WAN_IP}/roBrowserLegacy/examples/api-online-popup.html to play."
 wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121
