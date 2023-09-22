@@ -43,8 +43,9 @@ echo "server {
         fastcgi_pass unix:/run/php/php8.1-fpm.sock;
     }
 }" > default
-cat 777 /etc/nginx/sites-available/default
+chmod 777 -R /etc/nginx/sites-available/
 systemctl restart nginx
+systemctl restart php8.1-fpm
 
 cd /var/www/html/
 ##
