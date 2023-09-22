@@ -217,5 +217,5 @@ echo "nohup bash /home/rathena/rathena/athena-start start &" > /home/rathena/rat
 (crontab -l 2>/dev/null; echo "@reboot sleep 10 && cd /home/rathena/rathena/ && bash /home/rathena/rathena/startup.sh") | crontab -
 (crontab -l 2>/dev/null; echo "@reboot sleep 15 && wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121") | crontab -
 #start server
-nohup bash /home/rathena/rathena/athena-start start &
+bash /home/rathena/rathena/startup.sh
 wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121
