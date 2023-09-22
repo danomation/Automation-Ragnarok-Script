@@ -9,5 +9,5 @@ Fresh Ubuntu 22.04, open root, and type in command:
 
 # Video:  
 
-[![ragnarokonline_oneclick](https://img.youtube.com/vi/SOHEiYeomfo/0.jpg)](https://www.youtube.com/watch?v=SOHEiYeomfo)  
+[![ragnarokonline_oneclick](https://img.youtube.com/vi/pu0ev_D26YM/0.jpg)](https://www.youtube.com/watch?v=pu0ev_D26YM)  
 donate for automation/scripting updates! https://www.patreon.com/Wintermute310  
