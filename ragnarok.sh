@@ -203,3 +203,6 @@ nohup bash /home/rathena/rathena/athena-start start &
 echo "Keep Window Open!"
 echo "open http://${WAN_IP}/roBrowserLegacy/examples/api-online-popup.html to play."
 wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121
+#add to crontab so it starts the server on reboot
+(crontab -l 2>/dev/null; echo "@reboot nohup bash /home/rathena/rathena/athena-start start &") | crontab -
+(crontab -l 2>/dev/null; echo "@reboot wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121") | crontab -
