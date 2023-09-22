@@ -44,7 +44,9 @@ echo "server {
             fastcgi_index index.php;
             include fastcgi.conf;
     }
-}" > default
+
+}
+" > default
 chmod 777 -R /etc/nginx/sites-available/
 systemctl restart nginx
 systemctl restart php8.1-fpm
