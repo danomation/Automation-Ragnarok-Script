@@ -10,9 +10,9 @@ echo ${WAN_IP}
 
 
 #create ragnarok account
-adduser --quiet --disabled-password --shell /bin/bash --home /home/ragnarok --gecos "User" ragnarok
-echo "ragnarok:${RAGNAROK_USER_PASS}" | chpasswd
-usermod -aG sudo ragnarok
+#adduser --quiet --disabled-password --shell /bin/bash --home /home/ragnarok --gecos "User" ragnarok
+#echo "ragnarok:${RAGNAROK_USER_PASS}" | chpasswd
+#usermod -aG sudo ragnarok
 ##
 
 #install nginx as ragnarok
@@ -73,6 +73,13 @@ cd /var/www/html/roBrowserLegacy/examples/
 #sed -i 's/5.135.190.4:443/'"$WAN_IP"':5999/g' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
 #sed -i 's/5.135.190.4/'"$WAN_IP"'/g' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
 #sed -i 's/7000/6900/g' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
+##
+
+##
+#hack to fix character selection screen
+sed -i 's|charSelectNum = 2; //Old UI with mapname|charSelectNum = 1; //Old UI with mapname|g' /var/www/html/roBrowserLegacy/src/Engine/CharEngine.js
+##
+
 echo "
 <!DOCTYPE html>
 <html>
@@ -113,18 +120,18 @@ echo "
         </body>
 </html>
 " > /var/www/html/index.html
-
-
+mkdir /home/ragnarok/
 cd /home/ragnarok/
 sudo NEEDRESTART_SUSPEND=1 apt-get -y install npm
 npm install wsproxy -g
 
 #create user for rathena
-adduser --quiet --disabled-password --shell /bin/bash --home /home/rathena --gecos "User" rathena
-echo "rathena:${RAGNAROK_USER_PASS}" | chpasswd
-usermod -aG sudo rathena
-
+#adduser --quiet --disabled-password --shell /bin/bash --home /home/rathena --gecos "User" rathena
+#echo "rathena:${RAGNAROK_USER_PASS}" | chpasswd
+#usermod -aG sudo rathena
 #su rathena
+
+mkdir /home/rathena
 cd /home/rathena
 sudo apt-get -y update && sudo NEEDRESTART_SUSPEND=1 apt-get upgrade --yes
 
