@@ -270,11 +270,9 @@ sed -i 's/start_point_doram: lasa_fild01,48,297/start_point: prontera,155,187/g'
 sed -i 's/server_name: rAthena/server_name: ragnarok.sh/g' /home/rathena/rathena/conf/char_athena.conf
 ##
 #add to crontab so it starts the server on reboot
-cd /home/rathena/rathena/
-echo "cd /home/rathena/rathena/
-nohup bash /home/rathena/rathena/athena-start start &" > /home/rathena/rathena/startup.sh
-(crontab -l 2>/dev/null; echo "@reboot sleep 10 && cd /home/rathena/rathena/ && bash /home/rathena/rathena/startup.sh") | crontab -
-(crontab -l 2>/dev/null; echo "@reboot sleep 15 && wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121") | crontab -
+(crontab -l 2>/dev/null; echo "@reboot sleep 5 && cd /home/rathena/rathena/ && nohup bash athena-start start \&") | crontab -
+(crontab -l 2>/dev/null; echo "@reboot sleep 6 && wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121") | crontab -
 #start server
-bash /home/rathena/rathena/startup.sh
+cd /home/rathena/rathena/
+nohup bash athena-start start &
 wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121
