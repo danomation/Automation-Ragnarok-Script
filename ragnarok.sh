@@ -2,8 +2,8 @@
 MARIADB_ROOT_PASS=ragnarok
 RAGNAROK_DATABASE_PASS=ragnarok
 
-RAGNAROK_USER_PASS=ragnarok
-RATHENA_USER_PASS=ragnarok
+#RAGNAROK_USER_PASS=ragnarok
+#RATHENA_USER_PASS=ragnarok
 
 WAN_IP=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'`
 echo ${WAN_IP}
@@ -68,9 +68,52 @@ cd /var/www/html/
 cd /var/www/html/ && git clone https://github.com/MrAntares/roBrowserLegacy.git
 
 cd /var/www/html/roBrowserLegacy/examples/
-sed -i 's/5.135.190.4:443/'"$WAN_IP"':5999/g' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
-sed -i 's/5.135.190.4/'"$WAN_IP"'/g' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
-sed -i 's/7000/6900/g' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
+##
+#no longer needed
+#sed -i 's/5.135.190.4:443/'"$WAN_IP"':5999/g' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
+#sed -i 's/5.135.190.4/'"$WAN_IP"'/g' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
+#sed -i 's/7000/6900/g' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
+echo "
+<!DOCTYPE html>
+<html>
+        <head>
+                <title>ro.sussyvr.com</title>
+                <meta name=\"viewport\" content=\"initial-scale=1.0, user-scalable=yes\" />
+                <script type=\"text/javascript\" src=\"roBrowserLegacy/api.js\"></script>
+                <script type=\"text/javascript\">
+                        function initialize() {
+                                var ROConfig = {
+                                        target:        document.getElementById(\"robrowser\"),
+                                        type:          ROBrowser.TYPE.FRAME,
+                                        application:   ROBrowser.APP.ONLINE,
+                                        development:    true,
+                                        servers: [{
+                                                display:     \"Demo Server\",
+                                                desc:        \"roBrowser's demo server\",
+                                                address:     \"${WAN_IP}\",
+                                                port:        6900,
+                                                version:     25,
+                                                langtype:    12,
+                                                packetver:   20131223,
+                                                packetKeys:  true,
+                                                socketProxy: \"ws://${WAN_IP}:5999/\",
+                                                adminList:   []
+                                        }],
+                                        skipServerList:  true,
+                                        skipIntro:       true,
+                                };
+                                var RO = new ROBrowser(ROConfig);
+                                RO.start();
+                        }
+                        window.addEventListener(\"load\", initialize, false);
+                </script>
+        </head>
+        <body bgcolor=\"black\" style=\"overflow: hidden;\">
+        <div id=\"robrowser\" style=\"height:100vh; width:100vw; position: fixed; left: 0; top:0; overflow: hidden;\"></div>
+        </body>
+</html>
+" > /var/www/html/index.html
+
 
 cd /home/ragnarok/
 sudo NEEDRESTART_SUSPEND=1 apt-get -y install npm
@@ -205,6 +248,13 @@ echo "${SECURE_MYSQL_2}"
         ")
 
 echo "${SECURE_MYSQL_3}"
+sed -i 's/login_server_pw: ragnarok/login_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
+sed -i 's/ipban_db_pw: ragnarok/ipban_db_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
+sed -i 's/char_server_pw: ragnarok/char_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
+sed -i 's/map_server_pw: ragnarok/map_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
+sed -i 's/web_server_pw: ragnarok/web_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
+sed -i 's/log_db_pw: ragnarok/log_db_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
+
 sed -i 's/new_account: no/new_account: yes/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/start_point: iz_int,18,26:iz_int01,18,26:iz_int02,18,26:iz_int03,18,26:iz_int04,18,26/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
 sed -i 's/start_point_pre: new_1-1,53,111:new_2-1,53,111:new_3-1,53,111:new_4-1,53,111:new_5-1,53,111/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
