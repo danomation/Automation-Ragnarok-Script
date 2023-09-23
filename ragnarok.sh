@@ -213,7 +213,8 @@ sed -i 's/server_name: rAthena/server_name: ragnarok.sh/g' /home/rathena/rathena
 ##
 #add to crontab so it starts the server on reboot
 cd /home/rathena/rathena/
-echo "nohup bash /home/rathena/rathena/athena-start start &" > /home/rathena/rathena/startup.sh
+echo "cd /home/rathena/rathena/
+nohup bash /home/rathena/rathena/athena-start start &" > /home/rathena/rathena/startup.sh
 (crontab -l 2>/dev/null; echo "@reboot sleep 10 && cd /home/rathena/rathena/ && bash /home/rathena/rathena/startup.sh") | crontab -
 (crontab -l 2>/dev/null; echo "@reboot sleep 15 && wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121") | crontab -
 #start server
