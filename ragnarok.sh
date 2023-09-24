@@ -4,7 +4,7 @@ RAGNAROK_DATABASE_PASS=ragnarok
 
 #RAGNAROK_USER_PASS=ragnarok
 #RATHENA_USER_PASS=ragnarok
-
+sudo NEEDRESTART_SUSPEND=1 apt-get -y install net-tools
 WAN_IP=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'`
 echo ${WAN_IP}
 
