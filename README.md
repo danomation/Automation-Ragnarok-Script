@@ -7,6 +7,8 @@ None of the ragnarok online files are hosted by this github. It is only an autom
 Fresh Ubuntu 22.04, open root, and type in command:  
 1. git clone https://github.com/danomation/ragnarok_script.git && bash ragnarok_script/ragnarok.sh  
 2. Wait for server to install 15-20mins then navigate to http:// youriphere/ 
+3. Add your extracted grf files if you wish. Otherwise from what I understand it will attempt to read from the robrowser website. 
+Note: If you use your own extracted grf files, add remoteClient:  "http://127.0.0.1/roBrowserLegacy/client in the index.html. Also it must be added to the grf js you upload from the builder website.  
 
 # Video:  
 
