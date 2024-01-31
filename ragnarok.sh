@@ -1,6 +1,7 @@
 #!/bin/bash
 MARIADB_ROOT_PASS=ragnarok
 RAGNAROK_DATABASE_PASS=ragnarok
+RO_PACKET_VER=20211103
 
 #RAGNAROK_USER_PASS=ragnarok
 #RATHENA_USER_PASS=ragnarok
@@ -78,14 +79,15 @@ cd /var/www/html/roBrowserLegacy/examples/
 
 ##
 #hack to fix character selection screen
-sed -i 's|charSelectNum = 2; //Old UI with mapname|charSelectNum = 1; //Old UI with mapname|g' /var/www/html/roBrowserLegacy/src/Engine/CharEngine.js
+## I just disabled that....
+#sed -i 's|charSelectNum = 2; //Old UI with mapname|charSelectNum = 1; //Old UI with mapname|g' /var/www/html/roBrowserLegacy/src/Engine/CharEngine.js
 ##
 
 echo "
 <!DOCTYPE html>
 <html>
         <head>
-                <title>ro.sussyvr.com</title>
+                <title>Ragnarok</title>
                 <meta name=\"viewport\" content=\"initial-scale=1.0, user-scalable=yes\" />
                 <script type=\"text/javascript\" src=\"roBrowserLegacy/api.js\"></script>
                 <script type=\"text/javascript\">
@@ -102,8 +104,8 @@ echo "
                                                 port:        6900,
                                                 version:     25,
                                                 langtype:    12,
-                                                packetver:   20131223,
-                                                packetKeys:  true,
+                                                packetver:   ${RO_PACKET_VER},
+                                                packetKeys:  false,
                                                 socketProxy: \"ws://${WAN_IP}:5999/\",
                                                 adminList:   []
                                         }],
@@ -142,7 +144,18 @@ sudo NEEDRESTART_SUSPEND=1 apt -y install build-essential zlib1g-dev libpcre3-de
 sudo NEEDRESTART_SUSPEND=1 apt -y install libmariadb-dev libmariadb-dev-compat
 cd /home/rathena & git clone https://github.com/rathena/rathena.git
 cd /home/rathena/rathena
-bash /home/rathena/rathena/configure --enable-epoll=yes --enable-prere=no --enable-vip=no --enable-packetver=20131223
+
+##
+# testing a hack somebody provided
+sed -i '48 s/^/\/\/ /' /home/rathena/rathena/src/config/packets.hpp
+sed -i '56 s/^/\/\/ /' /home/rathena/rathena/src/config/packets.hpp
+##
+
+## old packetver
+#bash /home/rathena/rathena/configure --enable-epoll=yes --enable-prere=no --enable-vip=no --enable-packetver=20131223
+##
+bash /home/rathena/rathena/configure --enable-epoll=yes --enable-prere=no --enable-vip=no --enable-packetver=${RO_PACKET_VER}
+
 make clean && make server
 sudo NEEDRESTART_SUSPEND=1 apt -y install mariadb-server
 sudo NEEDRESTART_SUSPEND=1 apt-get -y install mariadb-client
