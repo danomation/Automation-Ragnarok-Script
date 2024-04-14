@@ -70,18 +70,6 @@ cd /var/www/html/
 cd /var/www/html/ && git clone https://github.com/MrAntares/roBrowserLegacy.git
 
 cd /var/www/html/roBrowserLegacy/examples/
-##
-#no longer needed
-#sed -i 's/5.135.190.4:443/'"$WAN_IP"':5999/g' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
-#sed -i 's/5.135.190.4/'"$WAN_IP"'/g' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
-#sed -i 's/7000/6900/g' /var/www/html/roBrowserLegacy/examples/api-online-popup.html
-##
-
-##
-#hack to fix character selection screen
-## I just disabled that....
-#sed -i 's|charSelectNum = 2; //Old UI with mapname|charSelectNum = 1; //Old UI with mapname|g' /var/www/html/roBrowserLegacy/src/Engine/CharEngine.js
-##
 
 ##
 #hack to fix equip on 20121004
