@@ -282,11 +282,33 @@ sed -i 's/map_server_pw: ragnarok/map_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' 
 sed -i 's/web_server_pw: ragnarok/web_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/log_db_pw: ragnarok/log_db_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
 
+##
+#QOL changes
 sed -i 's/new_account: no/new_account: yes/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/start_point: iz_int,18,26:iz_int01,18,26:iz_int02,18,26:iz_int03,18,26:iz_int04,18,26/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
 sed -i 's/start_point_pre: new_1-1,53,111:new_2-1,53,111:new_3-1,53,111:new_4-1,53,111:new_5-1,53,111/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
 sed -i 's/start_point_doram: lasa_fild01,48,297/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
 sed -i 's/server_name: rAthena/server_name: ragnarok.sh/g' /home/rathena/rathena/conf/char_athena.conf
+#
+##
+
+##
+# enable base custom npcs
+sed -i 's/\/\/npc: npc\/custom\/warper.txt/npc: npc\/custom\/warper.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sed -i 's/\/\/npc: npc\/custom\/jobmaster.txt/npc: npc\/custom\/jobmaster.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sed -i 's/\/\/npc: npc\/custom\/platinum_skills.txt/npc: npc\/custom\/platinum_skills.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sed -i 's/\/\/npc: npc\/custom\/healer.txt/npc: npc\/custom\/healer.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sed -i 's/\/\/npc: npc\/custom\/breeder.txt/npc: npc\/custom\/breeder.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sed -i 's/\/\/npc: npc\/custom\/card_seller.txt/npc: npc\/custom\/card_seller.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sed -i 's/\/\/npc: npc\/custom\/itemmall.txt/npc: npc\/custom\/itemmall.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sed -i 's/\/\/npc: npc\/custom\/stylist.txt/npc: npc\/custom\/stylist.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sed -i 's/\/\/npc: npc\/custom\/resetnpc.txt/npc: npc\/custom\/resetnpc.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sed -i 's/\/\/npc: npc\/custom\/card_remover.txt/npc: npc\/custom\/card_remover.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sed -i 's/\/\/npc: npc\/custom\/item_signer.txt/npc: npc\/custom\/item_signer.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sed -i 's/\/\/npc: npc\/custom\/woe_controller.txt/npc: npc\/custom\/woe_controller.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+#
+##
+
 ##
 #add to crontab so it starts the server on reboot
 (crontab -l 2>/dev/null; echo "@reboot sleep 5 && cd /home/rathena/rathena/ && nohup bash athena-start start \&") | crontab -
