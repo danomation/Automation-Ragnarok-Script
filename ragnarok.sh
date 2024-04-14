@@ -83,6 +83,11 @@ cd /var/www/html/roBrowserLegacy/examples/
 #sed -i 's|charSelectNum = 2; //Old UI with mapname|charSelectNum = 1; //Old UI with mapname|g' /var/www/html/roBrowserLegacy/src/Engine/CharEngine.js
 ##
 
+##
+#hack to fix equip on 20121004
+sed -i 's/if(PACKETVER.value >= 20120925) {/if(PACKETVER.value >= 20130320) {/g' /var/www/html/roBrowserLegacy/src/Network/PacketStructure.js
+##
+
 echo "
 <!DOCTYPE html>
 <html>
