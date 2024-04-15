@@ -12,24 +12,19 @@ Fresh Ubuntu 22.04, open root, and type in command:
 2. Wait for server to install 15-20mins then navigate to http:// youriphere/ 
 
 or use cloud-init (Not working yet):  
-1. 
-```
-#cloud-config
-
-write_files:
-  - path: /run/scripts/oneclick.sh
-    content: |
-      #!/bin/bash
-      git clone https://github.com/danomation/ragnarok_script.git && bash ragnarok_script/ragnarok.sh     
-    permissions: '0755'
-
-runcmd:
-  - [ sh, "/run/scripts/oneclick.sh" ]
-
-```
-# Known issues:
+1. ```
+   #cloud-config
+   write_files:
+     - path: /run/scripts/oneclick.sh
+       content: |
+         #!/bin/bash
+         git clone https://github.com/danomation/ragnarok_script.git && bash ragnarok_script/ragnarok.sh
+       permissions: '0755'
+   runcmd:
+     - [ sh, "/run/scripts/oneclick.sh" ]
+# Known issues:  
 1. First sign-on you can't make characters or login. 
-Solution: shift+F5 to refresh the client and try again 
+Solution: shift+F5 to refresh the client and try again  
 
 # Video:  
 
