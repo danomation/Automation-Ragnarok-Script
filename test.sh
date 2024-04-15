@@ -141,14 +141,10 @@ sed -i '48 s/^/\/\/ /' /home/rathena/rathena/src/config/packets.hpp
 sed -i '56 s/^/\/\/ /' /home/rathena/rathena/src/config/packets.hpp
 ##
 
-## old packetver
-#bash /home/rathena/rathena/configure --enable-epoll=yes --enable-prere=no --enable-vip=no --enable-packetver=20131223
-##
+## set packetver and compile
 bash /home/rathena/rathena/configure --enable-epoll=yes --enable-prere=no --enable-vip=no --enable-packetver=${RO_PACKET_VER}
-
 make clean && make server
-
-#sudo NEEDRESTART_SUSPEND=1 apt -y --fix-broken install
+##
 
 cd /home/rathena/rathena
 
