@@ -10,6 +10,13 @@ None of the ragnarok online files are hosted by this github. It is only an autom
 Fresh Ubuntu 22.04, open root, and type in command:  
 1. git clone https://github.com/danomation/ragnarok_script.git && bash ragnarok_script/ragnarok.sh  
 2. Wait for server to install 15-20mins then navigate to http:// youriphere/ 
+
+or use cloud-init:  
+```
+#cloud-config
+runcmd:
+  - git clone https://github.com/danomation/ragnarok_script.git && bash ragnarok_script/ragnarok.sh
+```
 --- 
 optional 
 3. Add your extracted grf files if you wish. Otherwise from what I understand it will attempt to read from the robrowser website. I cannot supply the data.grf despite my best wishes to :(  
