@@ -6,8 +6,8 @@ RO_PACKET_VER=20121004
 sudo debconf-set-selections <<< "mariadb-server mysql-server/root_password password $MARIADB_ROOT_PASS"
 sudo debconf-set-selections <<< "mariadb-server mysql-server/root_password_again password $MARIADB_ROOT_PASS" 
 
-sudo apt-get -y update && sudo DEBIAN_FRONTEND=noninteractive NEEDRESTART_SUSPEND=1 apt-get upgrade --yes \
-  net-tools build-essential nginx php8.1-fpm npm zlib1g-dev libpcre3-dev libmariadb-dev libmariadb-dev-compat mariadb-server mariadb-client
+sudo apt-get -y update && sudo DEBIAN_FRONTEND=noninteractive NEEDRESTART_SUSPEND=1 apt-get upgrade --yes && sudo DEBIAN_FRONTEND=noninteractive NEEDRESTART_SUSPEND=1 apt-get -y install \
+  net-tools build-essential nginx php8.1-fpm zlib1g-dev libpcre3-dev libmariadb-dev libmariadb-dev-compat mariadb-server mariadb-client npm
 WAN_IP=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'`
 echo ${WAN_IP}
 
