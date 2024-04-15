@@ -12,7 +12,7 @@ Fresh Ubuntu 22.04, open root, and type in command:
 2. Wait for server to install 15-20mins then navigate to http:// youriphere/ 
 ---
 or use cloud-init (NOT WORKING):  
-for some reason this doesn't work. The database doesn't get built. If you know why please lmk    
+The database doesn't get built. If you know why please lmk    
 1. ```
    #cloud-config
    write_files:
