@@ -5,8 +5,13 @@ RO_PACKET_VER=20121004
 
 #RAGNAROK_USER_PASS=ragnarok
 #RATHENA_USER_PASS=ragnarok
-sudo apt-get -y update && sudo NEEDRESTART_SUSPEND=1 apt-get upgrade --yes
-sudo NEEDRESTART_SUSPEND=1 apt-get -y install net-tools
+
+export DEBIAN_FRONTEND="noninteractive"
+sudo debconf-set-selections <<< "mariadb-server mysql-server/root_password password $MARIADB_ROOT_PASS"
+sudo debconf-set-selections <<< "mariadb-server mysql-server/root_password_again password $MARIADB_ROOT_PASS" 
+
+sudo apt-get -y update && sudo NEEDRESTART_SUSPEND=1 apt-get upgrade --yes \
+  net-tools build-essential nginx php8.1-fpm npm zlib1g-dev libpcre3-dev libmariadb-dev libmariadb-dev-compat mariadb-server
 WAN_IP=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'`
 echo ${WAN_IP}
 
@@ -20,8 +25,6 @@ echo ${WAN_IP}
 #install nginx as ragnarok
 #su ragnarok
 #sudo apt-get -y update && sudo NEEDRESTART_SUSPEND=1 apt-get upgrade --yes
-sudo NEEDRESTART_SUSPEND=1 apt-get -y install nginx
-sudo NEEDRESTART_SUSPEND=1 apt-get install php8.1-fpm -y
 cd /etc/nginx/sites-available/
 mv default default.old
 echo "server {
@@ -118,7 +121,6 @@ echo "
 " > /var/www/html/index.html
 mkdir /home/ragnarok/
 cd /home/ragnarok/
-sudo NEEDRESTART_SUSPEND=1 apt-get -y install npm
 npm install wsproxy -g
 
 #create user for rathena
@@ -129,7 +131,6 @@ npm install wsproxy -g
 
 mkdir /home/rathena
 cd /home/rathena
-sudo apt-get -y update && sudo NEEDRESTART_SUSPEND=1 apt-get upgrade --yes
 
 #install some pre-requisites
 
@@ -151,14 +152,7 @@ bash /home/rathena/rathena/configure --enable-epoll=yes --enable-prere=no --enab
 
 make clean && make server
 
-
-export DEBIAN_FRONTEND="noninteractive"
-sudo debconf-set-selections <<< "mariadb-server mysql-server/root_password password $MARIADB_ROOT_PASS"
-sudo debconf-set-selections <<< "mariadb-server mysql-server/root_password_again password $MARIADB_ROOT_PASS" 
-
-sudo NEEDRESTART_SUSPEND=1 apt -y --fix-broken install
-sudo NEEDRESTART_SUSPEND=1 apt-get -y install mariadb-server
-sudo NEEDRESTART_SUSPEND=1 apt-get -y install mariadb-client
+#sudo NEEDRESTART_SUSPEND=1 apt -y --fix-broken install
 
 cd /home/rathena/rathena
 
