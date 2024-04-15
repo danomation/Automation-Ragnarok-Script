@@ -15,14 +15,15 @@ or use cloud-init (NOT WORKING):
 The database doesn't get built. If you know why please lmk    
 1. ```
    #cloud-config
-   write_files:
-     - path: /run/scripts/oneclick.sh
-       content: |
-         #!/bin/bash
-         git clone https://github.com/danomation/ragnarok_script.git && bash ragnarok_script/ragnarok.sh
-       permissions: '0755'
+   users:
+     - name: ragnarok
+       groups: users, admin
+       sudo: ALL=(ALL) NOPASSWD:ALL
+       shell: /bin/bash
+       ssh_authorized_keys:
+         <your OpenSSL key(s) here>
    runcmd:
-     - [ sh, "/run/scripts/oneclick.sh" ]
+     - git clone 'https://github.com/danomation/Automation-Ragnarok-Script.git' && bash Automation-Ragnarok-Script/ragnarok.sh
 # Known issues:  
 1. First sign-on you can't make characters or login. 
 Solution: shift+F5 to refresh the client and try again  
