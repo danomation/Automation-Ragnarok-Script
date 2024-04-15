@@ -132,10 +132,6 @@ npm install wsproxy -g
 mkdir /home/rathena
 cd /home/rathena
 
-#install some pre-requisites
-
-sudo NEEDRESTART_SUSPEND=1 apt -y install build-essential zlib1g-dev libpcre3-dev
-sudo NEEDRESTART_SUSPEND=1 apt -y install libmariadb-dev libmariadb-dev-compat
 cd /home/rathena & git clone https://github.com/rathena/rathena.git
 cd /home/rathena/rathena
 
