@@ -197,7 +197,6 @@ source /home/rathena/rathena/sql-files/logs.sql;
 echo $MARIADB_STRING > create_user.sql
 mysql < create_user.sql
 
-echo "${SECURE_MYSQL_3}"
 #set ragnarok database pass
 sed -i 's/login_server_pw: ragnarok/login_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/ipban_db_pw: ragnarok/ipban_db_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
