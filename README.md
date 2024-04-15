@@ -21,7 +21,7 @@ The database doesn't get built. If you know why please lmk
        sudo: ALL=(ALL) NOPASSWD:ALL
        shell: /bin/bash
        ssh_authorized_keys:
-         <your OpenSSL key(s) here>
+         - <your OpenSSL key(s) here>
    runcmd:
      - git clone 'https://github.com/danomation/Automation-Ragnarok-Script.git' && bash Automation-Ragnarok-Script/ragnarok.sh
      - reboot
