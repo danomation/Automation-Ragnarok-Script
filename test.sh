@@ -156,6 +156,7 @@ export DEBIAN_FRONTEND="noninteractive"
 sudo debconf-set-selections <<< "mariadb-server mysql-server/root_password password $MARIADB_ROOT_PASS"
 sudo debconf-set-selections <<< "mariadb-server mysql-server/root_password_again password $MARIADB_ROOT_PASS" 
 
+sudo NEEDRESTART_SUSPEND=1 apt -y --fix-broken install
 sudo NEEDRESTART_SUSPEND=1 apt-get -y install mariadb-server
 sudo NEEDRESTART_SUSPEND=1 apt-get -y install mariadb-client
 
