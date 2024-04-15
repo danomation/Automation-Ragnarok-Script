@@ -3,28 +3,16 @@ MARIADB_ROOT_PASS=ragnarok
 RAGNAROK_DATABASE_PASS=ragnarok
 RO_PACKET_VER=20121004
 
-#RAGNAROK_USER_PASS=ragnarok
-#RATHENA_USER_PASS=ragnarok
-
-export DEBIAN_FRONTEND="noninteractive"
 sudo debconf-set-selections <<< "mariadb-server mysql-server/root_password password $MARIADB_ROOT_PASS"
 sudo debconf-set-selections <<< "mariadb-server mysql-server/root_password_again password $MARIADB_ROOT_PASS" 
 
-sudo apt-get -y update && sudo NEEDRESTART_SUSPEND=1 apt-get upgrade --yes \
+sudo apt-get -y update && sudo DEBIAN_FRONTEND=noninteractive NEEDRESTART_SUSPEND=1 apt-get upgrade --yes \
   net-tools build-essential nginx php8.1-fpm npm zlib1g-dev libpcre3-dev libmariadb-dev libmariadb-dev-compat mariadb-server mariadb-client
 WAN_IP=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'`
 echo ${WAN_IP}
 
-
-#create ragnarok account
-#adduser --quiet --disabled-password --shell /bin/bash --home /home/ragnarok --gecos "User" ragnarok
-#echo "ragnarok:${RAGNAROK_USER_PASS}" | chpasswd
-#usermod -aG sudo ragnarok
 ##
-
-#install nginx as ragnarok
-#su ragnarok
-#sudo apt-get -y update && sudo NEEDRESTART_SUSPEND=1 apt-get upgrade --yes
+# configure nginx for php
 cd /etc/nginx/sites-available/
 mv default default.old
 echo "server {
@@ -52,24 +40,15 @@ echo "server {
 
 }
 " > default
-echo " <html xmlns=\"http://www.w3.org/1999/xhtml\">    
-  <head>      
-    <title>ragnarok.sh</title>      
-    <meta http-equiv=\"refresh\" content=\"0;URL='http://${WAN_IP}/roBrowserLegacy/examples/api-online-popup.html'\" />    
-  </head>    
-  <body> 
-    <p>Redirecting to the <a href=\"http://${WAN_IP}/roBrowserLegacy/examples/api-online-popup.html\">
-      example url</a>.</p> 
-  </body>    
-</html>" > /var/www/html/index.html
 chmod 777 -R /etc/nginx/sites-available/
-chmod 775 /var/www/html/index.html
-systemctl restart nginx
+systemctl restart nginx # restart to finalize changes
 systemctl restart php8.1-fpm
-
-cd /var/www/html/
+#
 ##
-#clone repo for robrowser
+
+
+##
+#clone repo for robrowser - a javascript based web client for ragnarok online
 cd /var/www/html/ && git clone https://github.com/MrAntares/roBrowserLegacy.git
 ##
 
@@ -78,7 +57,7 @@ sed -i 's/if(PACKETVER.value >= 20120925) {/if(PACKETVER.value >= 20130320) {/g'
 ##
 
 ##
-# write client html
+# write the frontend's index.html
 echo "
 <!DOCTYPE html>
 <html>
@@ -123,24 +102,14 @@ echo "
 ##
 
 ##
-# run wsproxy
+# install wsproxy
 mkdir /home/ragnarok/
 cd /home/ragnarok/
 npm install wsproxy -g
 #
 ##
 
-#create user for rathena
-#adduser --quiet --disabled-password --shell /bin/bash --home /home/rathena --gecos "User" rathena
-#echo "rathena:${RAGNAROK_USER_PASS}" | chpasswd
-#usermod -aG sudo rathena
-#su rathena
-
-mkdir /home/rathena
-cd /home/rathena
-
-cd /home/rathena & git clone https://github.com/rathena/rathena.git
-cd /home/rathena/rathena
+mkdir /home/rathena && cd /home/rathena && git clone https://github.com/rathena/rathena.git
 
 ##
 # testing a hack somebody provided for packets
@@ -149,12 +118,14 @@ sed -i '56 s/^/\/\/ /' /home/rathena/rathena/src/config/packets.hpp
 ##
 
 ## set packetver and compile rathena
+cd /home/rathena/rathena
 bash /home/rathena/rathena/configure --enable-epoll=yes --enable-prere=no --enable-vip=no --enable-packetver=${RO_PACKET_VER}
 make clean && make server
 ##
 
-cd /home/rathena/rathena
 
+##
+# install ragnarok database
 echo "FLUSH PRIVILEGES;
 drop user if exists 'ragnarok'@'localhost';
 drop user if exists ragnarok; DROP DATABASE IF EXISTS ragnarok;
@@ -189,8 +160,10 @@ source /home/rathena/rathena/sql-files/roulette_default_data.sql;
 source /home/rathena/rathena/sql-files/logs.sql;
 " > create_user.sql
 mysql < create_user.sql
+#
+##
 
-#set ragnarok database pass
+#set ragnarok database pass in rathena
 sed -i 's/login_server_pw: ragnarok/login_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/ipban_db_pw: ragnarok/ipban_db_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/char_server_pw: ragnarok/char_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
@@ -199,7 +172,7 @@ sed -i 's/web_server_pw: ragnarok/web_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' 
 sed -i 's/log_db_pw: ragnarok/log_db_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
 
 ##
-#QOL changes
+#rathena QOL changes
 sed -i 's/new_account: no/new_account: yes/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/start_point: iz_int,18,26:iz_int01,18,26:iz_int02,18,26:iz_int03,18,26:iz_int04,18,26/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
 sed -i 's/start_point_pre: new_1-1,53,111:new_2-1,53,111:new_3-1,53,111:new_4-1,53,111:new_5-1,53,111/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
@@ -209,7 +182,7 @@ sed -i 's/server_name: rAthena/server_name: ragnarok.sh/g' /home/rathena/rathena
 ##
 
 ##
-# enable base custom npcs
+# enable rathena base custom npcs
 sed -i 's/\/\/npc: npc\/custom\/warper.txt/npc: npc\/custom\/warper.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
 sed -i 's/\/\/npc: npc\/custom\/jobmaster.txt/npc: npc\/custom\/jobmaster.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
 sed -i 's/\/\/npc: npc\/custom\/platinum_skills.txt/npc: npc\/custom\/platinum_skills.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
