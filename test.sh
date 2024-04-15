@@ -156,7 +156,7 @@ make clean && make server
 
 cd /home/rathena/rathena
 
-MARIADB_STRING="FLUSH PRIVILEGES;
+echo "FLUSH PRIVILEGES;
 drop user if exists 'ragnarok'@'localhost';
 drop user if exists ragnarok; DROP DATABASE IF EXISTS ragnarok;
 create user 'ragnarok'@'localhost' identified by '${RAGNAROK_DATABASE_PASS}';
@@ -188,8 +188,7 @@ source /home/rathena/rathena/sql-files/mob_skill_db2.sql;
 source /home/rathena/rathena/sql-files/web.sql;
 source /home/rathena/rathena/sql-files/roulette_default_data.sql;
 source /home/rathena/rathena/sql-files/logs.sql;
-"
-echo $MARIADB_STRING > create_user.sql
+" > create_user.sql
 mysql < create_user.sql
 
 #set ragnarok database pass
