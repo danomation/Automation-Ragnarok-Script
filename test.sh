@@ -71,14 +71,14 @@ cd /var/www/html/
 ##
 #clone repo for robrowser
 cd /var/www/html/ && git clone https://github.com/MrAntares/roBrowserLegacy.git
-
-cd /var/www/html/roBrowserLegacy/examples/
-
 ##
+
 #hack to fix equip on 20121004
 sed -i 's/if(PACKETVER.value >= 20120925) {/if(PACKETVER.value >= 20130320) {/g' /var/www/html/roBrowserLegacy/src/Network/PacketStructure.js
 ##
 
+##
+# write client html
 echo "
 <!DOCTYPE html>
 <html>
@@ -119,9 +119,16 @@ echo "
         </body>
 </html>
 " > /var/www/html/index.html
+#
+##
+
+##
+# run wsproxy
 mkdir /home/ragnarok/
 cd /home/ragnarok/
 npm install wsproxy -g
+#
+##
 
 #create user for rathena
 #adduser --quiet --disabled-password --shell /bin/bash --home /home/rathena --gecos "User" rathena
@@ -136,12 +143,12 @@ cd /home/rathena & git clone https://github.com/rathena/rathena.git
 cd /home/rathena/rathena
 
 ##
-# testing a hack somebody provided
+# testing a hack somebody provided for packets
 sed -i '48 s/^/\/\/ /' /home/rathena/rathena/src/config/packets.hpp
 sed -i '56 s/^/\/\/ /' /home/rathena/rathena/src/config/packets.hpp
 ##
 
-## set packetver and compile
+## set packetver and compile rathena
 bash /home/rathena/rathena/configure --enable-epoll=yes --enable-prere=no --enable-vip=no --enable-packetver=${RO_PACKET_VER}
 make clean && make server
 ##
