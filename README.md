@@ -24,6 +24,7 @@ The database doesn't get built. If you know why please lmk
          <your OpenSSL key(s) here>
    runcmd:
      - git clone 'https://github.com/danomation/Automation-Ragnarok-Script.git' && bash Automation-Ragnarok-Script/ragnarok.sh
+     - reboot
 # Known issues:  
 1. First sign-on you can't make characters or login. 
 Solution: shift+F5 to refresh the client and try again  
