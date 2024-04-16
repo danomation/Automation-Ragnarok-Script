@@ -55,7 +55,7 @@ sudo systemctl restart php8.1-fpm
 
 ##
 # clone repo for robrowser and install it - a javascript based web client for ragnarok online
-sudo cd /var/www/html/ && sudo git clone https://github.com/MrAntares/roBrowserLegacy.git
+cd /var/www/html/ && sudo git clone https://github.com/MrAntares/roBrowserLegacy.git
 #hack to fix equip on 20121004
 sudo sed -i 's/if(PACKETVER.value >= 20120925) {/if(PACKETVER.value >= 20130320) {/g' /var/www/html/roBrowserLegacy/src/Network/PacketStructure.js
 #
@@ -106,19 +106,19 @@ sudo echo "
 ##
 # install wsproxy - forward broadcast traffic to TCP
 sudo mkdir /home/ragnarok/
-sudo cd /home/ragnarok/
+cd /home/ragnarok/
 sudo npm install wsproxy -g
 #
 ##
 
 ##
 # get rathena from github and compile it
-sudo mkdir /home/rathena && sudo cd /home/rathena && sudo git clone https://github.com/rathena/rathena.git
+sudo mkdir /home/rathena && cd /home/rathena && sudo git clone https://github.com/rathena/rathena.git
 # testing a hack somebody provided for rathena's packets
 sudo sed -i '48 s/^/\/\/ /' /home/rathena/rathena/src/config/packets.hpp
 sudo sed -i '56 s/^/\/\/ /' /home/rathena/rathena/src/config/packets.hpp
 # set packetver and compile rathena
-sudo cd /home/rathena/rathena
+cd /home/rathena/rathena
 sudo bash /home/rathena/rathena/configure --enable-epoll=yes --enable-prere=no --enable-vip=no --enable-packetver=${RO_PACKET_VER}
 sudo make clean && sudo make server
 #
@@ -210,7 +210,7 @@ sudo sed -i 's/\/\/npc: npc\/custom\/woe_controller.txt/npc: npc\/custom\/woe_co
 
 ##
 # start server first time. Note, for further restarts just restart the whole ass server. See that crontab up there? yep.
-sudo cd /home/rathena/rathena/
+cd /home/rathena/rathena/
 sudo nohup bash athena-start start &
 sudo wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121
 ##
