@@ -12,6 +12,7 @@ sudo debconf-set-selections <<< "mariadb-server mysql-server/root_password passw
 sudo debconf-set-selections <<< "mariadb-server mysql-server/root_password_again password $MARIADB_ROOT_PASS" 
 sudo apt-get -y update && sudo apt-get upgrade --yes && sudo apt-get -y install net-tools build-essential nginx \
   php8.1-fpm zlib1g-dev libpcre3-dev libmariadb-dev libmariadb-dev-compat mariadb-server mariadb-client npm
+sudo /etc/init.d/mariadb start
 # grab ip
 WAN_IP=`dig @resolver4.opendns.com myip.opendns.com +short`
 echo ${WAN_IP}
