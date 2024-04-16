@@ -7,7 +7,7 @@ It's just a bash that automates installation of several things.
 None of the ragnarok online files are hosted by this github. It is only an automation piece for educational purposes. Please respect copyright laws  
 
 # Instructions:
-Fresh Ubuntu 22.04 VM, open root, and type in command:  
+(recommended) Fresh Ubuntu 22.04 VM, open root, and type in command:  
 1. ```git clone https://github.com/danomation/ragnarok_script.git && bash ragnarok_script/ragnarok.sh  ```
 2. Wait for server to install 15-20mins.
 3. Allow incoming ports TCP 80, 5999 if you have a firewall (AWS security group)  
