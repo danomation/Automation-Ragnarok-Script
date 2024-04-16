@@ -13,7 +13,7 @@ sudo debconf-set-selections <<< "mariadb-server mysql-server/root_password_again
 sudo apt-get -y update && sudo apt-get upgrade --yes && sudo apt-get -y install net-tools build-essential nginx \
   php8.1-fpm zlib1g-dev libpcre3-dev libmariadb-dev libmariadb-dev-compat mariadb-server mariadb-client npm
 # grab ip
-WAN_IP=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'`
+WAN_IP=`dig @resolver4.opendns.com myip.opendns.com +short`
 echo ${WAN_IP}
 #
 ##
@@ -21,8 +21,8 @@ echo ${WAN_IP}
 ##
 # configure nginx for php
 cd /etc/nginx/sites-available/
-mv default default.old
-echo "server {
+sudo mv default default.old
+sudo echo "server {
         listen 80 default_server;
         listen [::]:80 default_server;
 
@@ -46,21 +46,21 @@ echo "server {
     }
 
 }" > default
-chmod 777 -R /etc/nginx/sites-available/
-systemctl restart nginx # restart to finalize changes
-systemctl restart php8.1-fpm
+sudo chmod 777 -R /etc/nginx/sites-available/
+sudo systemctl restart nginx # restart to finalize changes
+sudo systemctl restart php8.1-fpm
 #
 ##
 
 
 ##
 # clone repo for robrowser and install it - a javascript based web client for ragnarok online
-cd /var/www/html/ && git clone https://github.com/MrAntares/roBrowserLegacy.git
+sudo cd /var/www/html/ && sudo git clone https://github.com/MrAntares/roBrowserLegacy.git
 #hack to fix equip on 20121004
-sed -i 's/if(PACKETVER.value >= 20120925) {/if(PACKETVER.value >= 20130320) {/g' /var/www/html/roBrowserLegacy/src/Network/PacketStructure.js
+sudo sed -i 's/if(PACKETVER.value >= 20120925) {/if(PACKETVER.value >= 20130320) {/g' /var/www/html/roBrowserLegacy/src/Network/PacketStructure.js
 #
 # write the frontend's index.html
-echo "
+sudo echo "
 <!DOCTYPE html>
 <html>
         <head>
@@ -105,28 +105,28 @@ echo "
 
 ##
 # install wsproxy - forward broadcast traffic to TCP
-mkdir /home/ragnarok/
-cd /home/ragnarok/
-npm install wsproxy -g
+sudo mkdir /home/ragnarok/
+sudo cd /home/ragnarok/
+sudo npm install wsproxy -g
 #
 ##
 
 ##
 # get rathena from github and compile it
-mkdir /home/rathena && cd /home/rathena && git clone https://github.com/rathena/rathena.git
+sudo mkdir /home/rathena && sudo cd /home/rathena && sudo git clone https://github.com/rathena/rathena.git
 # testing a hack somebody provided for rathena's packets
-sed -i '48 s/^/\/\/ /' /home/rathena/rathena/src/config/packets.hpp
-sed -i '56 s/^/\/\/ /' /home/rathena/rathena/src/config/packets.hpp
+sudo sed -i '48 s/^/\/\/ /' /home/rathena/rathena/src/config/packets.hpp
+sudo sed -i '56 s/^/\/\/ /' /home/rathena/rathena/src/config/packets.hpp
 # set packetver and compile rathena
-cd /home/rathena/rathena
-bash /home/rathena/rathena/configure --enable-epoll=yes --enable-prere=no --enable-vip=no --enable-packetver=${RO_PACKET_VER}
-make clean && make server
+sudo cd /home/rathena/rathena
+sudo bash /home/rathena/rathena/configure --enable-epoll=yes --enable-prere=no --enable-vip=no --enable-packetver=${RO_PACKET_VER}
+sudo make clean && sudo make server
 #
 ##
 
 ##
 # install ragnarok databases
-echo "FLUSH PRIVILEGES;
+sudo echo "FLUSH PRIVILEGES;
 drop user if exists 'ragnarok'@'localhost';
 drop user if exists ragnarok; DROP DATABASE IF EXISTS ragnarok;
 create user 'ragnarok'@'localhost' identified by '${RAGNAROK_DATABASE_PASS}';
@@ -159,45 +159,45 @@ source /home/rathena/rathena/sql-files/web.sql;
 source /home/rathena/rathena/sql-files/roulette_default_data.sql;
 source /home/rathena/rathena/sql-files/logs.sql;
 " > create_user.sql
-mysql < create_user.sql
+sudo mysql < create_user.sql
 #
 ##
 
 ##
 # set ragnarok database pass in rathena config
-sed -i 's/login_server_pw: ragnarok/login_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
-sed -i 's/ipban_db_pw: ragnarok/ipban_db_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
-sed -i 's/char_server_pw: ragnarok/char_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
-sed -i 's/map_server_pw: ragnarok/map_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
-sed -i 's/web_server_pw: ragnarok/web_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
-sed -i 's/log_db_pw: ragnarok/log_db_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
+sudo sed -i 's/login_server_pw: ragnarok/login_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
+sudo sed -i 's/ipban_db_pw: ragnarok/ipban_db_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
+sudo sed -i 's/char_server_pw: ragnarok/char_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
+sudo sed -i 's/map_server_pw: ragnarok/map_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
+sudo sed -i 's/web_server_pw: ragnarok/web_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
+sudo sed -i 's/log_db_pw: ragnarok/log_db_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
 #
 ##
 
 ##
 # rathena QOL changes to configuration
-sed -i 's/new_account: no/new_account: yes/g' /home/rathena/rathena/conf/login_athena.conf
-sed -i 's/start_point: iz_int,18,26:iz_int01,18,26:iz_int02,18,26:iz_int03,18,26:iz_int04,18,26/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
-sed -i 's/start_point_pre: new_1-1,53,111:new_2-1,53,111:new_3-1,53,111:new_4-1,53,111:new_5-1,53,111/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
-sed -i 's/start_point_doram: lasa_fild01,48,297/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
-sed -i 's/server_name: rAthena/server_name: ragnarok.sh/g' /home/rathena/rathena/conf/char_athena.conf
+sudo sed -i 's/new_account: no/new_account: yes/g' /home/rathena/rathena/conf/login_athena.conf
+sudo sed -i 's/start_point: iz_int,18,26:iz_int01,18,26:iz_int02,18,26:iz_int03,18,26:iz_int04,18,26/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
+sudo sed -i 's/start_point_pre: new_1-1,53,111:new_2-1,53,111:new_3-1,53,111:new_4-1,53,111:new_5-1,53,111/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
+sudo sed -i 's/start_point_doram: lasa_fild01,48,297/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
+sudo sed -i 's/server_name: rAthena/server_name: ragnarok.sh/g' /home/rathena/rathena/conf/char_athena.conf
 #
 ##
 
 ##
 # enable rathena base custom npcs
-sed -i 's/\/\/npc: npc\/custom\/warper.txt/npc: npc\/custom\/warper.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
-sed -i 's/\/\/npc: npc\/custom\/jobmaster.txt/npc: npc\/custom\/jobmaster.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
-sed -i 's/\/\/npc: npc\/custom\/platinum_skills.txt/npc: npc\/custom\/platinum_skills.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
-sed -i 's/\/\/npc: npc\/custom\/healer.txt/npc: npc\/custom\/healer.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
-sed -i 's/\/\/npc: npc\/custom\/breeder.txt/npc: npc\/custom\/breeder.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
-sed -i 's/\/\/npc: npc\/custom\/card_seller.txt/npc: npc\/custom\/card_seller.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
-sed -i 's/\/\/npc: npc\/custom\/itemmall.txt/npc: npc\/custom\/itemmall.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
-sed -i 's/\/\/npc: npc\/custom\/stylist.txt/npc: npc\/custom\/stylist.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
-sed -i 's/\/\/npc: npc\/custom\/resetnpc.txt/npc: npc\/custom\/resetnpc.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
-sed -i 's/\/\/npc: npc\/custom\/card_remover.txt/npc: npc\/custom\/card_remover.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
-sed -i 's/\/\/npc: npc\/custom\/item_signer.txt/npc: npc\/custom\/item_signer.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
-sed -i 's/\/\/npc: npc\/custom\/woe_controller.txt/npc: npc\/custom\/woe_controller.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sudo sed -i 's/\/\/npc: npc\/custom\/warper.txt/npc: npc\/custom\/warper.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sudo sed -i 's/\/\/npc: npc\/custom\/jobmaster.txt/npc: npc\/custom\/jobmaster.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sudo sed -i 's/\/\/npc: npc\/custom\/platinum_skills.txt/npc: npc\/custom\/platinum_skills.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sudo sed -i 's/\/\/npc: npc\/custom\/healer.txt/npc: npc\/custom\/healer.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sudo sed -i 's/\/\/npc: npc\/custom\/breeder.txt/npc: npc\/custom\/breeder.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sudo sed -i 's/\/\/npc: npc\/custom\/card_seller.txt/npc: npc\/custom\/card_seller.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sudo sed -i 's/\/\/npc: npc\/custom\/itemmall.txt/npc: npc\/custom\/itemmall.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sudo sed -i 's/\/\/npc: npc\/custom\/stylist.txt/npc: npc\/custom\/stylist.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sudo sed -i 's/\/\/npc: npc\/custom\/resetnpc.txt/npc: npc\/custom\/resetnpc.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sudo sed -i 's/\/\/npc: npc\/custom\/card_remover.txt/npc: npc\/custom\/card_remover.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sudo sed -i 's/\/\/npc: npc\/custom\/item_signer.txt/npc: npc\/custom\/item_signer.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
+sudo sed -i 's/\/\/npc: npc\/custom\/woe_controller.txt/npc: npc\/custom\/woe_controller.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
 #
 ##
 
@@ -210,7 +210,7 @@ sed -i 's/\/\/npc: npc\/custom\/woe_controller.txt/npc: npc\/custom\/woe_control
 
 ##
 # start server first time. Note, for further restarts just restart the whole ass server. See that crontab up there? yep.
-cd /home/rathena/rathena/
-nohup bash athena-start start &
-wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121
+sudo cd /home/rathena/rathena/
+sudo nohup bash athena-start start &
+sudo wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121
 ##
