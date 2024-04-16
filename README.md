@@ -1,7 +1,7 @@
 # Update!! 
 UI issues fixed! Change made: Adjusted packetversion to work with the default remote client  
 
-# ragnarokonline_oneclick
+# Ragnarok Online Server+Client  
 webclient+server for Ubuntu 22.04. This script does very little but it can make a server in 12 minutes or so. 
 It's just a bash that automates installation of several things.  
 None of the ragnarok online files are hosted by this github. It is only an automation piece for educational purposes. Please respect copyright laws  
