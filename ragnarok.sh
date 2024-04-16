@@ -3,25 +3,23 @@ MARIADB_ROOT_PASS=ragnarok
 RAGNAROK_DATABASE_PASS=ragnarok
 RO_PACKET_VER=20121004
 
-#RAGNAROK_USER_PASS=ragnarok
-#RATHENA_USER_PASS=ragnarok
-sudo apt-get -y update && sudo NEEDRESTART_SUSPEND=1 apt-get upgrade --yes
-sudo NEEDRESTART_SUSPEND=1 apt-get -y install net-tools
+##
+# install required packages
+export NEEDRESTART_MODE=a
+export DEBIAN_FRONTEND=noninteractive
+export DEBIAN_PRIORITY=critical
+sudo debconf-set-selections <<< "mariadb-server mysql-server/root_password password $MARIADB_ROOT_PASS"
+sudo debconf-set-selections <<< "mariadb-server mysql-server/root_password_again password $MARIADB_ROOT_PASS" 
+sudo apt-get -y update && sudo apt-get upgrade --yes && sudo apt-get -y install net-tools build-essential nginx \
+  php8.1-fpm zlib1g-dev libpcre3-dev libmariadb-dev libmariadb-dev-compat mariadb-server mariadb-client npm
+# grab ip
 WAN_IP=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'`
 echo ${WAN_IP}
-
-
-#create ragnarok account
-#adduser --quiet --disabled-password --shell /bin/bash --home /home/ragnarok --gecos "User" ragnarok
-#echo "ragnarok:${RAGNAROK_USER_PASS}" | chpasswd
-#usermod -aG sudo ragnarok
+#
 ##
 
-#install nginx as ragnarok
-#su ragnarok
-#sudo apt-get -y update && sudo NEEDRESTART_SUSPEND=1 apt-get upgrade --yes
-sudo NEEDRESTART_SUSPEND=1 apt-get -y install nginx
-sudo NEEDRESTART_SUSPEND=1 apt-get install php8.1-fpm -y
+##
+# configure nginx for php
 cd /etc/nginx/sites-available/
 mv default default.old
 echo "server {
@@ -47,35 +45,21 @@ echo "server {
             include fastcgi.conf;
     }
 
-}
-" > default
-echo " <html xmlns=\"http://www.w3.org/1999/xhtml\">    
-  <head>      
-    <title>ragnarok.sh</title>      
-    <meta http-equiv=\"refresh\" content=\"0;URL='http://${WAN_IP}/roBrowserLegacy/examples/api-online-popup.html'\" />    
-  </head>    
-  <body> 
-    <p>Redirecting to the <a href=\"http://${WAN_IP}/roBrowserLegacy/examples/api-online-popup.html\">
-      example url</a>.</p> 
-  </body>    
-</html>" > /var/www/html/index.html
+}" > default
 chmod 777 -R /etc/nginx/sites-available/
-chmod 775 /var/www/html/index.html
-systemctl restart nginx
+systemctl restart nginx # restart to finalize changes
 systemctl restart php8.1-fpm
-
-cd /var/www/html/
+#
 ##
-#clone repo for robrowser
+
+
+##
+# clone repo for robrowser and install it - a javascript based web client for ragnarok online
 cd /var/www/html/ && git clone https://github.com/MrAntares/roBrowserLegacy.git
-
-cd /var/www/html/roBrowserLegacy/examples/
-
-##
 #hack to fix equip on 20121004
 sed -i 's/if(PACKETVER.value >= 20120925) {/if(PACKETVER.value >= 20130320) {/g' /var/www/html/roBrowserLegacy/src/Network/PacketStructure.js
-##
-
+#
+# write the frontend's index.html
 echo "
 <!DOCTYPE html>
 <html>
@@ -116,162 +100,82 @@ echo "
         </body>
 </html>
 " > /var/www/html/index.html
+#
+##
+
+##
+# install wsproxy - forward broadcast traffic to TCP
 mkdir /home/ragnarok/
 cd /home/ragnarok/
-sudo NEEDRESTART_SUSPEND=1 apt-get -y install npm
 npm install wsproxy -g
-
-#create user for rathena
-#adduser --quiet --disabled-password --shell /bin/bash --home /home/rathena --gecos "User" rathena
-#echo "rathena:${RAGNAROK_USER_PASS}" | chpasswd
-#usermod -aG sudo rathena
-#su rathena
-
-mkdir /home/rathena
-cd /home/rathena
-sudo apt-get -y update && sudo NEEDRESTART_SUSPEND=1 apt-get upgrade --yes
-
-#install some pre-requisites
-
-sudo NEEDRESTART_SUSPEND=1 apt -y install build-essential zlib1g-dev libpcre3-dev
-sudo NEEDRESTART_SUSPEND=1 apt -y install libmariadb-dev libmariadb-dev-compat
-cd /home/rathena & git clone https://github.com/rathena/rathena.git
-cd /home/rathena/rathena
+#
+##
 
 ##
-# testing a hack somebody provided
+# get rathena from github and compile it
+mkdir /home/rathena && cd /home/rathena && git clone https://github.com/rathena/rathena.git
+# testing a hack somebody provided for rathena's packets
 sed -i '48 s/^/\/\/ /' /home/rathena/rathena/src/config/packets.hpp
 sed -i '56 s/^/\/\/ /' /home/rathena/rathena/src/config/packets.hpp
-##
-
-## old packetver
-#bash /home/rathena/rathena/configure --enable-epoll=yes --enable-prere=no --enable-vip=no --enable-packetver=20131223
-##
-bash /home/rathena/rathena/configure --enable-epoll=yes --enable-prere=no --enable-vip=no --enable-packetver=${RO_PACKET_VER}
-
-make clean && make server
-sudo NEEDRESTART_SUSPEND=1 apt -y install mariadb-server
-sudo NEEDRESTART_SUSPEND=1 apt-get -y install mariadb-client
-sudo NEEDRESTART_SUSPEND=1 apt-get -y install expect
-
+# set packetver and compile rathena
 cd /home/rathena/rathena
-MARIADB_STRING="FLUSH PRIVILEGES;
+bash /home/rathena/rathena/configure --enable-epoll=yes --enable-prere=no --enable-vip=no --enable-packetver=${RO_PACKET_VER}
+make clean && make server
+#
+##
+
+##
+# install ragnarok databases
+echo "FLUSH PRIVILEGES;
 drop user if exists 'ragnarok'@'localhost';
 drop user if exists ragnarok; DROP DATABASE IF EXISTS ragnarok;
 create user 'ragnarok'@'localhost' identified by '${RAGNAROK_DATABASE_PASS}';
 FLUSH PRIVILEGES;
 CREATE DATABASE ragnarok; GRANT ALL ON ragnarok.* TO 'ragnarok'@'localhost';
-FLUSH PRIVILEGES;"
+FLUSH PRIVILEGES;
+use ragnarok;
+show tables;
+source /home/rathena/rathena/sql-files/item_db.sql;
+source /home/rathena/rathena/sql-files/item_db_equip.sql;
+source /home/rathena/rathena/sql-files/item_db_equip.sql;
+source /home/rathena/rathena/sql-files/item_db_etc.sql;
+source /home/rathena/rathena/sql-files/item_db_re.sql;
+source /home/rathena/rathena/sql-files/item_db_re_equip.sql;
+source /home/rathena/rathena/sql-files/item_db_re_etc.sql;
+source /home/rathena/rathena/sql-files/item_db2.sql;
+source /home/rathena/rathena/sql-files/item_db_re_usable.sql;
+source /home/rathena/rathena/sql-files/item_db_usable.sql;
+source /home/rathena/rathena/sql-files/item_db2_re.sql;
+source /home/rathena/rathena/sql-files/main.sql;
+source /home/rathena/rathena/sql-files/mob_db.sql;
+source /home/rathena/rathena/sql-files/mob_skill_db.sql;
+source /home/rathena/rathena/sql-files/mob_db_re.sql;
+source /home/rathena/rathena/sql-files/mob_db2.sql;
+source /home/rathena/rathena/sql-files/mob_db2_re.sql;
+source /home/rathena/rathena/sql-files/mob_skill_db2_re.sql;
+source /home/rathena/rathena/sql-files/mob_skill_db_re.sql;
+source /home/rathena/rathena/sql-files/mob_skill_db2.sql;
+source /home/rathena/rathena/sql-files/web.sql;
+source /home/rathena/rathena/sql-files/roulette_default_data.sql;
+source /home/rathena/rathena/sql-files/logs.sql;
+" > create_user.sql
+mysql < create_user.sql
+#
+##
 
-
-        SECURE_MYSQL=$(expect -c "
-        set timeout 3
-        spawn mysql_secure_installation
-        expect \"Enter current password for root (enter for none):\"
-        send \"\r\"
-        expect \"Switch to unix_socket authentication \[Y/n\]\"
-        send \"n\r\"
-        expect \"Set root password? \[Y/n\]\"
-        send \"y\r\"
-        expect \"New password:\"
-        send \"${MARIADB_ROOT_PASS}\r\"
-        expect \"Re-enter new password:\"
-        send \"${MARIADB_ROOT_PASS}\r\"
-        expect \"Remove anonymous users? \[Y/n\]\"
-        send \"y\r\"
-        expect \"Disallow root login remotely? \[Y/n\]\"
-        send \"n\r\"
-        expect \"Remove test database and access to it? \[Y/n\]\"
-        send \"y\r\"
-        expect \"Reload privilege tables now? \[Y/n\]\"
-        send \"y\r\"
-        expect eof
-        ")
-
-echo "${SECURE_MYSQL}"
-
-
-        SECURE_MYSQL_2=$(expect -c "
-        set timeout 3
-        spawn mysql -u root -p -e \"${MARIADB_STRING}\"
-        expect \"Enter password:\"
-        send \"${MARIADB_ROOT_PASS}\r\"
-        expect eof
-        send \"exit\r\"
-        expect eof
-        ")
-
-echo "${SECURE_MYSQL_2}"
-
-        SECURE_MYSQL_3=$(expect -c "
-        set timeout 3
-        spawn mysql -u root -p
-        expect \"Enter password:\"
-        send \"${MARIADB_ROOT_PASS}\r\"
-        expect eof
-        send \"use ragnarok;\r\"
-        expect eof
-        send \"show tables;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/item_db.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/item_db_equip.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/item_db_etc.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/item_db_re.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/item_db_re_equip.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/item_db_re_etc.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/item_db2.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/item_db_re_usable.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/item_db_usable.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/item_db2_re.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/main.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/mob_db.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/mob_skill_db.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/mob_db_re.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/mob_db2.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/mob_db2_re.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/mob_skill_db2_re.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/mob_skill_db_re.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/mob_skill_db2.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/web.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/roulette_default_data.sql;\r\"
-        expect eof
-        send \"source /home/rathena/rathena/sql-files/logs.sql;\r\"
-        expect eof
-        send \"exit\r\"
-        expect eof
-        ")
-
-echo "${SECURE_MYSQL_3}"
-#set ragnarok database pass
+##
+# set ragnarok database pass in rathena config
 sed -i 's/login_server_pw: ragnarok/login_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/ipban_db_pw: ragnarok/ipban_db_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/char_server_pw: ragnarok/char_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/map_server_pw: ragnarok/map_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/web_server_pw: ragnarok/web_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/log_db_pw: ragnarok/log_db_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
+#
+##
 
 ##
-#QOL changes
+# rathena QOL changes to configuration
 sed -i 's/new_account: no/new_account: yes/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/start_point: iz_int,18,26:iz_int01,18,26:iz_int02,18,26:iz_int03,18,26:iz_int04,18,26/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
 sed -i 's/start_point_pre: new_1-1,53,111:new_2-1,53,111:new_3-1,53,111:new_4-1,53,111:new_5-1,53,111/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
@@ -281,7 +185,7 @@ sed -i 's/server_name: rAthena/server_name: ragnarok.sh/g' /home/rathena/rathena
 ##
 
 ##
-# enable base custom npcs
+# enable rathena base custom npcs
 sed -i 's/\/\/npc: npc\/custom\/warper.txt/npc: npc\/custom\/warper.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
 sed -i 's/\/\/npc: npc\/custom\/jobmaster.txt/npc: npc\/custom\/jobmaster.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
 sed -i 's/\/\/npc: npc\/custom\/platinum_skills.txt/npc: npc\/custom\/platinum_skills.txt/g' /home/rathena/rathena/npc/scripts_custom.conf
@@ -301,7 +205,12 @@ sed -i 's/\/\/npc: npc\/custom\/woe_controller.txt/npc: npc\/custom\/woe_control
 #add to crontab so it starts the server on reboot
 (crontab -l 2>/dev/null; echo "@reboot sleep 5 && cd /home/rathena/rathena/ && nohup bash athena-start start \&") | crontab -
 (crontab -l 2>/dev/null; echo "@reboot sleep 6 && wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121") | crontab -
-#start server
+#
+##
+
+##
+# start server first time. Note, for further restarts just restart the whole ass server. See that crontab up there? yep.
 cd /home/rathena/rathena/
 nohup bash athena-start start &
 wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121
+##
