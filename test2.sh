@@ -8,12 +8,11 @@ RO_PACKET_VER=20121004
 export NEEDRESTART_MODE=a
 export DEBIAN_FRONTEND=noninteractive
 export DEBIAN_PRIORITY=critical
-
 sudo debconf-set-selections <<< "mariadb-server mysql-server/root_password password $MARIADB_ROOT_PASS"
 sudo debconf-set-selections <<< "mariadb-server mysql-server/root_password_again password $MARIADB_ROOT_PASS" 
-
 sudo apt-get -y update && sudo apt-get upgrade --yes && sudo apt-get -y install net-tools build-essential nginx \
   php8.1-fpm zlib1g-dev libpcre3-dev libmariadb-dev libmariadb-dev-compat mariadb-server mariadb-client npm
+# grab ip
 WAN_IP=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'`
 echo ${WAN_IP}
 #
