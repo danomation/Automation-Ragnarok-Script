@@ -77,7 +77,7 @@ sudo echo "
                                         servers: [{
                                                 display:     \"Demo Server\",
                                                 desc:        \"roBrowser's demo server\",
-                                                address:     \"${WAN_IP}\",
+                                                address:     \"localhost\",
                                                 port:        6900,
                                                 version:     25,
                                                 langtype:    12,
