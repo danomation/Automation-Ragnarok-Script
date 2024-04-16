@@ -12,7 +12,7 @@ Fresh Ubuntu 22.04, open root, and type in command:
 2. Wait for server to install 15-20mins then navigate to http:// youriphere/ 
 3. Allow incoming ports TCP 80, 5999 
 ---
-or use cloud-init:  
+cloud-init:  
 1. Use puttygen to create a private and public key. 
 2. Then copy the public OpenSSH key to the below ssh_authorized_keys list.
 3. Save your private key, and load it in putty so you can connect.
