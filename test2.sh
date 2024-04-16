@@ -57,7 +57,9 @@ cd /var/www/html/ && git clone https://github.com/MrAntares/roBrowserLegacy.git
 ##
 
 #hack to fix equip on 20121004
+#
 sed -i 's/if(PACKETVER.value >= 20120925) {/if(PACKETVER.value >= 20130320) {/g' /var/www/html/roBrowserLegacy/src/Network/PacketStructure.js
+#
 ##
 
 ##
@@ -113,18 +115,17 @@ npm install wsproxy -g
 #
 ##
 
-mkdir /home/rathena && cd /home/rathena && git clone https://github.com/rathena/rathena.git
-
 ##
-# testing a hack somebody provided for packets
+# get rathena from github and compile it
+mkdir /home/rathena && cd /home/rathena && git clone https://github.com/rathena/rathena.git
+# testing a hack somebody provided for rathena's packets
 sed -i '48 s/^/\/\/ /' /home/rathena/rathena/src/config/packets.hpp
 sed -i '56 s/^/\/\/ /' /home/rathena/rathena/src/config/packets.hpp
-##
-
-## set packetver and compile rathena
+# set packetver and compile rathena
 cd /home/rathena/rathena
 bash /home/rathena/rathena/configure --enable-epoll=yes --enable-prere=no --enable-vip=no --enable-packetver=${RO_PACKET_VER}
 make clean && make server
+#
 ##
 
 
@@ -167,13 +168,16 @@ mysql < create_user.sql
 #
 ##
 
-#set ragnarok database pass in rathena
+##
+#set ragnarok database pass in rathena config
 sed -i 's/login_server_pw: ragnarok/login_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/ipban_db_pw: ragnarok/ipban_db_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/char_server_pw: ragnarok/char_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/map_server_pw: ragnarok/map_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/web_server_pw: ragnarok/web_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/log_db_pw: ragnarok/log_db_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
+#
+##
 
 ##
 #rathena QOL changes
@@ -206,7 +210,12 @@ sed -i 's/\/\/npc: npc\/custom\/woe_controller.txt/npc: npc\/custom\/woe_control
 #add to crontab so it starts the server on reboot
 (crontab -l 2>/dev/null; echo "@reboot sleep 5 && cd /home/rathena/rathena/ && nohup bash athena-start start \&") | crontab -
 (crontab -l 2>/dev/null; echo "@reboot sleep 6 && wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121") | crontab -
-#start server
+#
+##
+
+##
+# start server first time. Note, for further restarts just restart the whole ass server. See that crontab up there? yep.
 cd /home/rathena/rathena/
 nohup bash athena-start start &
 wsproxy -p 5999 -a localhost:6900,localhost:6121,localhost:5121
+##
