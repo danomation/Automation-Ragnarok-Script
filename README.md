@@ -11,20 +11,23 @@ Fresh Ubuntu 22.04, open root, and type in command:
 1. ```git clone https://github.com/danomation/ragnarok_script.git && bash ragnarok_script/ragnarok.sh  ```
 2. Wait for server to install 15-20mins then navigate to http:// youriphere/ 
 ---
-or use cloud-init (NOT WORKING):  
-The database doesn't get built. If you know why please lmk    
-1. ```
-   #cloud-config
-   users:
-     - name: ragnarok
-       groups: users, admin
-       sudo: ALL=(ALL) NOPASSWD:ALL
-       shell: /bin/bash
-       ssh_authorized_keys:
-         - <your OpenSSL key(s) here>
-   runcmd:
-     - git clone 'https://github.com/danomation/Automation-Ragnarok-Script.git' && bash Automation-Ragnarok-Script/ragnarok.sh
-     - reboot
+or use cloud-init:  
+1. Use puttygen to create a private and public key. 
+2. Then copy the public OpenSSH key to the below ssh_authorized_keys list.
+3. Save your private key, and load it in putty so you can connect.
+```
+ #cloud-config
+ users:
+   - name: ragnarok
+     groups: users, admin
+     sudo: ALL=(ALL) NOPASSWD:ALL
+     shell: /bin/bash
+     ssh_authorized_keys:
+       - <your OpenSSL key(s) here>
+ runcmd:
+   - git clone 'https://github.com/danomation/Automation-Ragnarok-Script.git' && bash Automation-Ragnarok-Script/ragnarok.sh
+   - reboot
+```
 # Known issues:  
 1. First sign-on you can't make characters or login. 
 Solution: shift+F5 to refresh the client and try again  
