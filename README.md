@@ -31,7 +31,7 @@ Or - Using cloud-init script:
    - reboot
 ```
 ---
-Or - WSL2:  
+Or - WSL2 (cursed):  
 Note: it requires WSL2 (for systemd). see https://askubuntu.com/questions/1379425/system-has-not-been-booted-with-systemd-as-init-system-pid-1-cant-operate 
 1. run the following with elevated command prompt
 ```
