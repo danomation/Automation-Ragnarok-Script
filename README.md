@@ -50,7 +50,7 @@ su root
 git clone 'https://github.com/danomation/Automation-Ragnarok-Script.git' && bash Automation-Ragnarok-Script/ragnarok.sh
 (wait until finished)
 ``` 
-2. Open ports 80, 5999 on your router.  
+2. Open ports 80, 5999 on your router and hyper-v or whatever network switch for WSL  
 Note1: If you have a CGNAT (as with fiber companies) buy an ipv4, install it on your router, then forward the ports 80, 5999  
 Note2: if you just want to run local and dont want to run with anyone else - then edit /var/www/html/index.html to use localhost for the websocket line ws://. 
 3. http://yourwanip or http://localhost
