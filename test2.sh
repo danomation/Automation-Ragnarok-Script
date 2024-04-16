@@ -54,17 +54,11 @@ systemctl restart php8.1-fpm
 
 
 ##
-#clone repo for robrowser - a javascript based web client for ragnarok online
+# clone repo for robrowser and install it - a javascript based web client for ragnarok online
 cd /var/www/html/ && git clone https://github.com/MrAntares/roBrowserLegacy.git
-##
-
 #hack to fix equip on 20121004
-#
 sed -i 's/if(PACKETVER.value >= 20120925) {/if(PACKETVER.value >= 20130320) {/g' /var/www/html/roBrowserLegacy/src/Network/PacketStructure.js
 #
-##
-
-##
 # write the frontend's index.html
 echo "
 <!DOCTYPE html>
@@ -110,7 +104,7 @@ echo "
 ##
 
 ##
-# install wsproxy
+# install wsproxy - forward broadcast traffic to TCP
 mkdir /home/ragnarok/
 cd /home/ragnarok/
 npm install wsproxy -g
@@ -130,9 +124,8 @@ make clean && make server
 #
 ##
 
-
 ##
-# install ragnarok database
+# install ragnarok databases
 echo "FLUSH PRIVILEGES;
 drop user if exists 'ragnarok'@'localhost';
 drop user if exists ragnarok; DROP DATABASE IF EXISTS ragnarok;
@@ -171,7 +164,7 @@ mysql < create_user.sql
 ##
 
 ##
-#set ragnarok database pass in rathena config
+# set ragnarok database pass in rathena config
 sed -i 's/login_server_pw: ragnarok/login_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/ipban_db_pw: ragnarok/ipban_db_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/char_server_pw: ragnarok/char_server_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/rathena/rathena/conf/login_athena.conf
@@ -182,7 +175,7 @@ sed -i 's/log_db_pw: ragnarok/log_db_pw: '"$RAGNAROK_DATABASE_PASS"'/g' /home/ra
 ##
 
 ##
-#rathena QOL changes
+# rathena QOL changes to configuration
 sed -i 's/new_account: no/new_account: yes/g' /home/rathena/rathena/conf/login_athena.conf
 sed -i 's/start_point: iz_int,18,26:iz_int01,18,26:iz_int02,18,26:iz_int03,18,26:iz_int04,18,26/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
 sed -i 's/start_point_pre: new_1-1,53,111:new_2-1,53,111:new_3-1,53,111:new_4-1,53,111:new_5-1,53,111/start_point: prontera,155,187/g' /home/rathena/rathena/conf/char_athena.conf
