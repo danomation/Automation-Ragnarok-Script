@@ -7,12 +7,13 @@ It's just a bash that automates installation of several things.
 None of the ragnarok online files are hosted by this github. It is only an automation piece for educational purposes. Please respect copyright laws  
 
 # Instructions:
-Fresh Ubuntu 22.04, open root, and type in command:  
+Fresh Ubuntu 22.04 VM, open root, and type in command:  
 1. ```git clone https://github.com/danomation/ragnarok_script.git && bash ragnarok_script/ragnarok.sh  ```
-2. Wait for server to install 15-20mins then navigate to http:// youriphere/ 
-3. Allow incoming ports TCP 80, 5999 
+2. Wait for server to install 15-20mins.
+3. Allow incoming ports TCP 80, 5999 if you have a firewall (AWS security group)  
+4. then navigate to http:// youriphere/ 
 ---
-cloud-init:  
+Or - Using cloud-init script:  
 1. Use puttygen to create a private and public key. 
 2. Then copy the public OpenSSH key to the below ssh_authorized_keys list.
 3. Save your private key, and load it in putty so you can connect.
@@ -29,6 +30,31 @@ cloud-init:
    - git clone 'https://github.com/danomation/Automation-Ragnarok-Script.git' && bash Automation-Ragnarok-Script/ragnarok.sh
    - reboot
 ```
+---
+Or - WSL2:  
+Note: it requires WSL2 (for systemd). see https://askubuntu.com/questions/1379425/system-has-not-been-booted-with-systemd-as-init-system-pid-1-cant-operate 
+1. run the following with elevated command prompt
+```
+wsl --install
+wsl --update
+wsl --shutdown
+wsl --terminate Ubuntu
+wsl --unregister Ubuntu
+wsl --install -d Ubuntu
+(Ubuntu starts) 
+(set username and pass) 
+sudo passwd
+(set password)
+su root
+(enter password)
+git clone 'https://github.com/danomation/Automation-Ragnarok-Script.git' && bash Automation-Ragnarok-Script/ragnarok.sh
+(wait until finished)
+``` 
+2. Open ports 80, 5999 on your router.  
+Note1: If you have a CGNAT (as with fiber companies) buy an ipv4, install it on your router, then forward the ports 80, 5999  
+Note2: if you just want to run local and dont want to run with anyone else - then edit /var/www/html/index.html to use localhost for the websocket line ws://. 
+3. http://yourwanip or http://localhost
+
 # Known issues:  
 1. First sign-on you can't make characters or login. 
 Solution: shift+F5 to refresh the client and try again  
