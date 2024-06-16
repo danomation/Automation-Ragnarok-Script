@@ -6,7 +6,7 @@ webclient+server for Ubuntu 22.04. This script does very little but it can make 
 It's just a bash that automates installation of several things.  
 None of the ragnarok online files are hosted by this github. It is only an automation piece for educational purposes. Please respect copyright laws  
 
-# Instructions:
+# Instructions REQUIRES Ubuntu 22.04:
 (recommended) Fresh Ubuntu 22.04 VM, open root, and type in command:  
 1. ```git clone https://github.com/danomation/ragnarok_script.git && bash ragnarok_script/ragnarok.sh  ```
 2. Wait for server to install 15-20mins.
