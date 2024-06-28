@@ -1,5 +1,5 @@
 # Automation Script for RO Server + Web Client
-It is only an automation script for educational purposes. Please respect all copyright laws.  
+This is an automation script for educational purposes. Please respect all copyright laws.  
 This bash script automates what can be a complicated install in 12 minutes or so.  
 * None of the ragnarok online files are hosted by this github.  
 * The ragnarok web client was not created by me. It can be found at https://github.com/MrAntares/roBrowserLegacy  
