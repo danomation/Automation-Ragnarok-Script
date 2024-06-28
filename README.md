@@ -4,8 +4,10 @@ UI issues fixed! Change made: Adjusted packetversion to work with the default re
 # Ragnarok Online Server+Client  
 webclient+server for Ubuntu 22.04. This script does very little but it can make a server in 12 minutes or so. 
 It's just a bash that automates installation of several things.  
-None of the ragnarok online files are hosted by this github. It is only an automation piece for educational purposes. Please respect copyright laws.  
-Note that the ragnarok web client github is at https://github.com/MrAntares/roBrowserLegacy   
+None of the ragnarok online files are hosted by this github. It is only an automation piece to for educational purposes. Please respect copyright laws.  
+
+The ragnarok web client was not created by me. It can be found at https://github.com/MrAntares/roBrowserLegacy  
+The ragnarok web client discord is https://discord.gg/8JdHwM4Kqm  
 
 # Instructions REQUIRES Ubuntu 22.04:
 (recommended) Fresh Ubuntu 22.04 VM, open root, and type in command:  
