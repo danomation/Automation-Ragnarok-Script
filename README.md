@@ -1,5 +1,5 @@
 # Automation Script for RO Server + Web Client
-It is only an automation piece to for educational purposes. Please respect copyright laws.  
+It is only an automation script for educational purposes. Please respect all copyright laws.  
 This script automates a complicated install in 12 minutes or so. 
 It's just a bash that automates installation of several things.  
 None of the ragnarok online files are hosted by this github.  
