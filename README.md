@@ -1,11 +1,9 @@
 # Automation Script for RO Server + Web Client
 It is only an automation script for educational purposes. Please respect all copyright laws.  
-This script automates a complicated install in 12 minutes or so. 
-It's just a bash that automates installation of several things.  
-None of the ragnarok online files are hosted by this github.  
-
-The ragnarok web client was not created by me. It can be found at https://github.com/MrAntares/roBrowserLegacy  
-Their discord is https://discord.gg/8JdHwM4Kqm  
+This bash script automates what can be a complicated install in 12 minutes or so.  
+* None of the ragnarok online files are hosted by this github.  
+* The ragnarok web client was not created by me. It can be found at https://github.com/MrAntares/roBrowserLegacy  
+* Their discord is https://discord.gg/8JdHwM4Kqm  
 
 # Instructions REQUIRES Ubuntu 22.04:
 (recommended) Fresh Ubuntu 22.04 VM, open root, and type in command:  
