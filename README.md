@@ -59,7 +59,15 @@ Note2: if you just want to run local and dont want to run with anyone else - the
 Solution: shift+F5 to refresh the client and try again  
 
 # Details: 
+out of the box diagram: 
 ![defaultshellscript](https://github.com/danomation/Automation-Ragnarok-Script/assets/17872783/0505ce34-624f-459f-a2d5-615cf48a6425)  
+If you want to enable encryption you must:
+1. install certbot, grab the cert, configure your /etc/nginx/sites-enabled/default and add a reverse proxy for location /roBrowserLegacy/client to proxy_pass http://grf.robrowser.com.
+2. you must use your https cert for wss://. The wsproxy is set in the crontab you will need to use switches -s -c and -k. -c is your fullchain and -k is your privkey
+3. edit your index.html, add a remoteClient field within your key values pointing to your webserver path for https://yourserver/roBrowserLegacy/client/.
+4. also in your index.html change ws:// to wss://
+5. close all tabs for the server in your browser, delete all cookies and site data, close browser, start browser back up and try.
+6. if done correctly it should load the port 80 traffic for http://grf.robrowser.com as https://yourserver/roBrowserLegacy/client instead. 
 
 
 # Video:  
