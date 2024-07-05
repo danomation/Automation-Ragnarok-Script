@@ -58,6 +58,10 @@ Note2: if you just want to run local and dont want to run with anyone else - the
 1. First sign-on you can't make characters or login. 
 Solution: shift+F5 to refresh the client and try again  
 
+# Details: 
+![defaultshellscript](https://github.com/danomation/Automation-Ragnarok-Script/assets/17872783/0505ce34-624f-459f-a2d5-615cf48a6425)  
+
+
 # Video:  
 
 [![ragnarokonline_oneclick](https://img.youtube.com/vi/HSR538rZhXM/0.jpg)](https://www.youtube.com/watch?v=HSR538rZhXM)  
