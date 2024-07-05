@@ -66,7 +66,7 @@ Solution: see diagrams below and follow instructions to enable 443
 out of the box diagram: 
 ![defaultshellscript](https://github.com/danomation/Automation-Ragnarok-Script/assets/17872783/0505ce34-624f-459f-a2d5-615cf48a6425)  
 Known issue attempting 443 encryption:
-![mixed_http_https_traffic_mismatch](https://github.com/danomation/Automation-Ragnarok-Script/assets/17872783/1beb4197-c90f-48e9-a064-92a4bbcc82ce)  
+![mixed_http_https_traffic_mismatch](https://github.com/danomation/Automation-Ragnarok-Script/assets/17872783/108ca43f-2560-4702-95df-3ce7c4d04185)  
 Potential solution: 
 ![reverse_proxy_80_to_443](https://github.com/danomation/Automation-Ragnarok-Script/assets/17872783/1efc1cac-f448-41d5-afd3-0dde521a8015)  
 steps for solution:
