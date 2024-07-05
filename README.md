@@ -55,8 +55,12 @@ Note2: if you just want to run local and dont want to run with anyone else - the
 3. http://yourwanip or http://localhost
 
 # Known issues:  
-1. First sign-on you can't make characters or login. 
-Solution: shift+F5 to refresh the client and try again  
+1. First sign-on you can't make characters or login.   
+Solution: shift+F5 to refresh the client and try again   
+2. After changing remote client config the client doesn't load as intended.  
+Solution: close all tabs for the server in your browser, delete all cookies and site data, close browser, start browser back up and try.
+3. Enabling 443 on webserver causes client not to load due  
+Solution: see diagrams below and follow instructions to enable 443  
 
 # Details: 
 out of the box diagram: 
